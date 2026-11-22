@@ -1,0 +1,1884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OOP Dog Camp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday learning: warm, plain words, one idea at a time, every concept gets a toy to poke
+   IDEA a dog-camp front desk: the class is a blue architect's blueprint, every object is a yellow dog tag
+   PICTURE hero = a live dog factory: blueprint on the left, press new Dog(...) and a new tag card is stamped out
+   COLOUR white ground, blueprint blue as the dominant field, tag yellow for objects, coral only for errors
+   TYPE Fredoka for titles, Nunito Sans for reading, JetBrains Mono for code
+   LAYOUT each section = text beside its toy on laptops; on phones title, toy, then text */
+:root{color-scheme:light dark;
+--bg:light-dark(#ffffff,#0d1220);
+--ink:light-dark(#151823,#edf0f7);
+--mut:light-dark(#596173,#a5adc2);
+--line:light-dark(#dde2ec,#283149);
+--card:light-dark(#f6f8fc,#141b2c);
+--bp:light-dark(#1450c8,#4b82f5);
+--bpdeep:light-dark(#1146b4,#0f2a63);
+--bpsoft:light-dark(#eaf1ff,#121f3f);
+--tag:#ffc93c;
+--tagsoft:light-dark(#fff5d6,#2e2610);
+--tagink:#3a2a00;
+--bad:light-dark(#cf3420,#ff8571);
+--badsoft:light-dark(#fdebe8,#3a1712);
+--ok:light-dark(#0f7d53,#55d6a0);
+--oksoft:light-dark(#e4f6ee,#0f2e22);
+--code:light-dark(#0f1730,#0a0f1c);
+--codeink:#e6ecff;
+--petbg:light-dark(#efe5ff,#2a1c47);
+--petink:light-dark(#5b2bb0,#c9adff);
+--gamebg:light-dark(#ffd75e,#1f1a0c)}
+:root[data-theme=light]{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:72px;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 "Nunito Sans",system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:Fredoka,"Nunito Sans",sans-serif;line-height:1.08;letter-spacing:-.01em;text-wrap:balance;margin:0 0 .45em}
+h1{font-size:clamp(34px,5.2vw,56px);font-weight:700}
+h2{font-size:clamp(28px,3.4vw,40px);font-weight:600}
+h3{font-size:21px;font-weight:600;margin-top:1.2em}
+p{margin:0 0 .9em;max-width:62ch}
+code,.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.88em}
+p code,li code,td code{background:var(--bpsoft);color:var(--bp);padding:1px 5px;border-radius:5px;overflow-wrap:anywhere}
+a{color:var(--bp)}
+.band{padding-block:clamp(36px,5vw,72px);padding-inline:max(5vw,16px)}
+.wrap{max-width:1240px;margin:0 auto}
+.alt{background:var(--bpsoft)}
+.two{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,4vw,56px);align-items:start}
+.two.flip{grid-template-columns:minmax(0,6fr) minmax(0,5fr)}
+.two.flip>.txt{order:2}
+.src{font-size:14px;color:var(--mut)}
+.big{font-size:19px}
+ul.clean{padding-left:1.1em;margin:0 0 1em}
+ul.clean li{margin:.25em 0}
+.panel{background:var(--bg);border:1.5px solid var(--line);border-radius:18px;padding:clamp(14px,2vw,22px)}
+.alt .panel{border-color:color-mix(in srgb,var(--bp) 22%,var(--line))}
+.ptitle{font-family:Fredoka,sans-serif;font-weight:600;font-size:18px;margin:0 0 10px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button,select,input{font:inherit}
+.btn{min-height:44px;padding:8px 14px;border-radius:12px;border:1.5px solid var(--bp);background:var(--bg);color:var(--bp);font-weight:700;cursor:pointer;font-size:15px}
+.btn.code{font-family:"JetBrains Mono",monospace;font-weight:600;font-size:14px}
+.btn:hover{background:var(--bpsoft)}
+.btn:focus-visible,.chip:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--tag);outline-offset:2px}
+.btn.on,.btn:active{background:var(--bp);color:#fff}
+.btn.solid{background:var(--bp);color:#fff}
+.btn.ghost{border-color:var(--line);color:var(--ink)}
+.btn.warn{border-color:var(--bad);color:var(--bad)}
+.btn.warn:hover{background:var(--badsoft)}
+input,select{min-height:44px;font-size:16px;padding:8px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+label{font-size:14px;font-weight:700;color:var(--mut);display:grid;gap:4px}
+.seg{display:inline-flex;border:1.5px solid var(--bp);border-radius:12px;overflow:hidden;flex-wrap:wrap}
+.seg button{min-height:42px;border:0;background:transparent;color:var(--bp);padding:6px 14px;font-weight:700;cursor:pointer;font-size:15px}
+.seg button[aria-pressed=true]{background:var(--bp);color:#fff}
+pre.java{background:var(--code);color:var(--codeink);border-radius:14px;padding:14px 0;margin:0;font:13.5px/1.6 "JetBrains Mono",monospace;overflow-x:auto}
+pre.java .ln{display:block;padding:0 16px;white-space:pre;border-left:4px solid transparent;transition:background .2s}
+pre.java .ln.hi{background:rgba(255,201,60,.16);border-left-color:var(--tag)}
+pre.java .ln.dim{opacity:.38}
+pre.java .ln.err{background:rgba(255,110,90,.18);border-left-color:#ff6e5a}
+.k{color:#8fb4ff;font-weight:600}.s{color:#ffd479}.c{color:#8892ad;font-style:italic}.n{color:#ff9fb2}.t{color:#7fe0c3}
+.console{background:var(--code);color:#d9f7e6;border-radius:12px;padding:10px 14px;font:13.5px/1.6 "JetBrains Mono",monospace;min-height:64px;overflow-x:auto}
+.console .cmd{color:#8fb4ff}.console .e{color:#ff8f7d}.console .w{color:#ffd479}
+.console div{white-space:pre-wrap;overflow-wrap:anywhere}
+.note{border-radius:14px;padding:12px 16px;background:var(--tagsoft);border:1.5px solid color-mix(in srgb,var(--tag) 70%,transparent);margin:12px 0}
+.note.bad{background:var(--badsoft);border-color:color-mix(in srgb,var(--bad) 50%,transparent)}
+.note.good{background:var(--oksoft);border-color:color-mix(in srgb,var(--ok) 50%,transparent)}
+.note p:last-child{margin:0}
+.flash{animation:fl .7s}
+@keyframes fl{0%{box-shadow:0 0 0 0 var(--tag)}100%{box-shadow:0 0 0 14px transparent}}
+@keyframes pop{from{transform:scale(.6) rotate(-6deg);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+
+/* nav */
+nav.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav.toc .scroll{flex:1;display:flex;gap:4px;overflow-x:auto;padding:8px 8px 8px max(5vw,16px);scrollbar-width:thin}
+nav.toc a{flex:none;text-decoration:none;color:var(--ink);font-weight:700;font-size:14px;padding:8px 12px;border-radius:10px;white-space:nowrap}
+nav.toc a:hover{background:var(--bpsoft);color:var(--bp)}
+@media(max-width:900px){nav.toc{position:static}}
+
+/* hero */
+.hero{background:var(--bpdeep);color:#fff;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:28px 28px}
+.hero h1{color:#fff;max-width:22ch}
+.hero .lede{font-size:19px;max-width:64ch;color:#dbe6ff}
+.factory{display:grid;grid-template-columns:minmax(0,4fr) auto minmax(0,7fr);gap:18px;align-items:center;margin-top:22px}
+.blueprint{border:2px solid rgba(255,255,255,.85);border-radius:6px;padding:16px 18px;font:14px/1.7 "JetBrains Mono",monospace;background:rgba(255,255,255,.04);position:relative}
+.blueprint .bt{font-family:Fredoka,sans-serif;font-size:22px;border-bottom:2px solid rgba(255,255,255,.85);margin:-4px -18px 10px;padding:0 18px 8px}
+.blueprint .sec{color:#b9cdfa;font-size:12px;font-family:"Nunito Sans",sans-serif;font-weight:800;margin-top:6px}
+.blueprint .stamp{position:absolute;right:-8px;top:-12px;background:var(--tag);color:var(--tagink);font:700 12px "Nunito Sans",sans-serif;padding:3px 9px;border-radius:999px;transform:rotate(6deg)}
+.arrowcol{display:grid;justify-items:center;gap:6px;color:#fff;font:600 14px "JetBrains Mono",monospace}
+.arrowcol svg{width:64px;height:40px}
+.kennel{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:12px}
+.tagcard{background:var(--tag);color:var(--tagink);border-radius:16px 16px 16px 16px;padding:10px 12px 12px;position:relative;animation:pop .45s cubic-bezier(.2,1.4,.4,1);box-shadow:0 3px 0 rgba(0,0,0,.18)}
+.tagcard::before{content:"";position:absolute;top:9px;right:11px;width:10px;height:10px;border-radius:50%;background:var(--bpdeep);box-shadow:inset 0 0 0 2px rgba(0,0,0,.2)}
+.tagcard svg{width:56px;height:56px;display:block}
+.tagcard .nm{font:600 19px Fredoka,sans-serif;margin-top:2px}
+.tagcard .fl{font:12.5px/1.5 "JetBrains Mono",monospace}
+.tagcard .mini{margin-top:6px;min-height:34px;padding:4px 8px;border-radius:9px;border:1.5px solid var(--tagink);background:transparent;color:var(--tagink);font:600 12px "JetBrains Mono",monospace;cursor:pointer}
+.tagcard .mini:hover{background:rgba(0,0,0,.08)}
+.form{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-top:20px;background:rgba(255,255,255,.08);border-radius:16px;padding:14px}
+.form label{color:#dbe6ff}
+.form input,.form select{background:#fff;color:#151823;border-color:transparent}
+.form .btn{background:var(--tag);color:var(--tagink);border-color:var(--tag)}
+.form .btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.6)}
+.liveline{font:14px "JetBrains Mono",monospace;color:#ffe9a8;margin-top:10px;overflow-wrap:anywhere}
+.hero .note{background:rgba(255,201,60,.14);border-color:rgba(255,201,60,.5);color:#fff}
+
+/* mixer */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.paint{width:52px;height:52px;border-radius:50%;border:3px solid var(--line);cursor:pointer;position:relative}
+.paint[aria-pressed=true]{border-color:var(--ink);transform:scale(1.08)}
+.mixout{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;margin-top:14px}
+.blob{width:92px;height:92px;border-radius:44% 56% 52% 48%/50% 44% 56% 50%;border:3px solid var(--line);transition:background .35s}
+
+/* arrays vs objects */
+.cmp{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.arr{font:13px "JetBrains Mono",monospace}
+.arr .r{display:grid;grid-template-columns:62px repeat(6,minmax(0,1fr));gap:3px;margin-bottom:3px;align-items:center}
+.arr .h{color:var(--mut);font-size:12px}
+.arr .cell{background:var(--card);border:1px solid var(--line);border-radius:6px;text-align:center;padding:4px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.arr .cell.col{background:var(--tagsoft);border-color:var(--tag)}
+.arr .cell.bad{background:var(--badsoft);border-color:var(--bad);color:var(--bad);font-weight:700}
+.arr .cell.good{background:var(--oksoft);border-color:var(--ok);font-weight:700}
+.mini-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.mc{background:var(--tag);color:var(--tagink);border-radius:10px;padding:6px 8px;font:12px/1.45 "JetBrains Mono",monospace}
+.mc b{font:600 15px Fredoka,sans-serif;display:block}
+.mc.good{outline:3px solid var(--ok)}
+
+/* vocab */
+.defs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:8px}
+.def{background:var(--bg);border:1.5px solid var(--line);border-radius:16px;padding:14px}
+.def svg{width:100%;height:84px;display:block;margin-bottom:6px}
+.def b{font:600 19px Fredoka,sans-serif;display:block}
+.def span{font-size:15px;color:var(--mut)}
+.bins{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.bin{border:2px dashed var(--line);border-radius:14px;padding:10px;min-height:120px;cursor:pointer;background:var(--bg)}
+.bin.ready{border-color:var(--bp);background:var(--bpsoft)}
+.bin h4{margin:0 0 6px;font:600 16px Fredoka,sans-serif}
+.bin h4 small{font:600 13px "Nunito Sans",sans-serif;color:var(--mut)}
+.chip{display:inline-flex;align-items:center;min-height:40px;padding:4px 12px;margin:3px;border-radius:999px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:600 14px "JetBrains Mono",monospace;cursor:pointer}
+.chip.sel{border-color:var(--bp);background:var(--bp);color:#fff}
+.chip.f{background:var(--tagsoft);border-color:var(--tag);cursor:default}
+.chip.m{background:var(--bpsoft);border-color:var(--bp);cursor:default}
+.shake{animation:sh .4s}
+@keyframes sh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.uml{border:2px solid var(--ink);border-radius:4px;font:14px/1.6 "JetBrains Mono",monospace;max-width:330px;background:var(--bg)}
+.uml>div{padding:6px 12px;border-bottom:2px solid var(--ink)}
+.uml>div:last-child{border:0}
+.uml .nm{text-align:center;font-weight:600;background:var(--bpsoft)}
+.anat{display:flex;flex-wrap:wrap;gap:6px;font:600 15px "JetBrains Mono",monospace;align-items:center;margin:8px 0}
+.anat button{min-height:44px;border-radius:10px;border:2px solid;padding:4px 10px;cursor:pointer;background:var(--bg);font:inherit}
+.anat button[aria-pressed=true]{color:#fff!important}
+
+/* memory diagrams */
+.mem{position:relative;display:grid;grid-template-columns:minmax(84px,0.8fr) minmax(0,1.6fr);column-gap:clamp(40px,8vw,90px);row-gap:10px}
+.mem svg.wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.mem .colh{font-size:13px;font-weight:800;color:var(--mut)}
+.vars,.objs{display:grid;gap:12px;align-content:start}
+.var{border:2px solid var(--bp);border-radius:10px;padding:6px 10px;background:var(--bg);font:13.5px "JetBrains Mono",monospace;position:relative;z-index:1}
+.var .vn{font-weight:600;color:var(--bp)}
+.var .vv{color:var(--mut);font-size:12.5px}
+.var.hl{background:var(--tagsoft);border-color:var(--tag)}
+.obj{border:2px solid var(--tagink);border-radius:12px;background:var(--tag);color:var(--tagink);padding:6px 10px 8px;font:13px/1.55 "JetBrains Mono",monospace;position:relative;z-index:1;animation:pop .4s}
+:root[data-theme=dark] .obj{border-color:#000}
+.obj .oa{font:700 12px "Nunito Sans",sans-serif;opacity:.75}
+.obj .fr{display:flex;justify-content:space-between;gap:8px}
+.obj .fr span:last-child{font-weight:600}
+.obj .chg{background:rgba(255,255,255,.55);border-radius:4px}
+.obj.hl{outline:4px solid var(--bp);outline-offset:2px}
+.stepper{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0}
+.stepper .cnt{font-weight:800;color:var(--mut);font-size:14px}
+
+/* tables */
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:14px;color:var(--mut);font-weight:800}
+td.y{color:var(--ok);font-weight:800}td.x{color:var(--bad);font-weight:800}
+tr.pick td{background:var(--tagsoft)}
+
+/* capsule */
+.capsule{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-radius:999px;overflow:hidden;border:2.5px solid var(--ink);min-height:150px}
+.capsule>div{padding:16px 22px}
+.capsule .cf{background:var(--bpsoft)}
+.capsule .cm{background:var(--badsoft)}
+.capsule h4{margin:0 0 4px;font:600 17px Fredoka,sans-serif}
+.capsule ul{margin:0;padding-left:1em;font:13.5px/1.6 "JetBrains Mono",monospace}
+.lock{display:inline-block;width:14px;height:14px;vertical-align:-2px}
+
+/* restaurant */
+.rest{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.rest>div{border-radius:16px;padding:12px;border:2px solid;text-align:center}
+.rest svg{width:100%;height:92px}
+.rest b{display:block;font:600 18px Fredoka,sans-serif}
+.rest span{font-size:14px;color:var(--mut)}
+
+/* tree */
+.tree svg{width:100%;height:auto;display:block}
+.from{display:grid;gap:6px}
+.from button{display:flex;justify-content:space-between;gap:10px;align-items:center;min-height:44px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);padding:6px 12px;cursor:pointer;font:600 14px "JetBrains Mono",monospace;text-align:left}
+.from button span:last-child{font:700 12px "Nunito Sans",sans-serif;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.from .pet{background:var(--petbg);color:var(--petink)}
+.from .dog{background:var(--bpsoft);color:var(--bp)}
+.from .objc{background:var(--card);color:var(--mut);border:1px solid var(--line)}
+.tf{display:grid;gap:6px}
+.tf .q{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:center;border:1.5px solid var(--line);border-radius:12px;padding:6px 6px 6px 12px;background:var(--bg)}
+.tf .q.r{border-color:var(--ok);background:var(--oksoft)}
+.tf .q.w{border-color:var(--bad);background:var(--badsoft)}
+.speech{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:10px 0}
+.pal{border:1.5px solid var(--line);border-radius:16px;padding:10px;text-align:center;background:var(--bg)}
+.pal svg{width:84px;height:84px}
+.bubble{font:600 18px Fredoka,sans-serif;background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:6px 10px;display:inline-block;min-width:60%}
+.bubble.on{background:var(--tag);color:var(--tagink);border-color:var(--tag)}
+
+/* pillars + cheat */
+.pillars{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.pill{border-radius:18px;padding:16px;border:2px solid var(--line);background:var(--bg)}
+.pill svg{width:54px;height:54px}
+.pill b{display:block;font:600 20px Fredoka,sans-serif;margin:4px 0}
+.pill span{font-size:15px;color:var(--mut)}
+.pill .when{display:inline-block;margin-top:8px;font-size:13px;font-weight:800;padding:2px 10px;border-radius:999px;background:var(--bpsoft);color:var(--bp)}
+.cheat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cheat div{border-left:4px solid var(--tag);padding:6px 12px;background:var(--bg);border-radius:0 12px 12px 0}
+.cheat b{display:block;font:600 17px Fredoka,sans-serif}
+.cheat span{font-size:15px}
+.quiz{display:grid;gap:14px}
+.qq{border:1.5px solid var(--line);border-radius:16px;padding:14px;background:var(--bg)}
+.qq p{font-weight:700;margin-bottom:8px}
+.qq .opts{display:grid;gap:6px}
+.qq .opts button{text-align:left;min-height:44px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:8px 12px;cursor:pointer;font:15px "Nunito Sans",sans-serif}
+.qq .opts button.r{border-color:var(--ok);background:var(--oksoft)}
+.qq .opts button.w{border-color:var(--bad);background:var(--badsoft)}
+.qq .why{font-size:15px;margin-top:8px;color:var(--mut)}
+.score{font:600 22px Fredoka,sans-serif}
+/* story, badges, part 2 */
+.story{display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px;align-items:start;background:var(--card);border:1.5px dashed color-mix(in srgb,var(--bp) 45%,var(--line));border-radius:16px;padding:12px 14px;margin:0 0 18px}
+.story svg{width:52px;height:52px}
+.story p{margin:0;font-size:16px;max-width:none}
+.story b{color:var(--bp)}
+.hero .story{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.45)}
+.hero .story b{color:var(--tag)}
+.hero h2{color:#fff}
+nav.toc .bar{display:flex;align-items:center;max-width:1340px;margin:0 auto}
+nav.toc .sep{flex:none;align-self:center;font-size:12px;font-weight:800;color:var(--mut);padding:0 4px 0 10px;white-space:nowrap}
+.paws{flex:none;display:flex;align-items:center;gap:6px;font-weight:800;font-size:14px;padding:0 max(3vw,12px) 0 8px;color:var(--bp);white-space:nowrap}
+.paws svg{width:20px;height:20px;fill:currentColor}
+.toast{position:fixed;left:50%;top:14px;transform:translate(-50%,-180%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:14px;font-weight:700;display:flex;gap:10px;align-items:center;z-index:50;transition:transform .35s;max-width:calc(100vw - 32px);font-size:15px}
+.toast.show{transform:translate(-50%,0)}
+.toast svg{width:22px;height:22px;fill:var(--tag);flex:none}
+.think{display:grid;gap:8px}
+.par{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:8px 0 12px}
+.par div{border:1.5px solid var(--line);border-radius:14px;padding:10px 12px;background:var(--bg)}
+.par div.me{border-color:var(--bp);background:var(--bpsoft)}
+.par b{display:block;font:600 17px Fredoka,sans-serif}
+.par span{font-size:14.5px}
+.tally{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:10px 0}
+.tally div{border-radius:14px;padding:10px;text-align:center;background:var(--tag);color:var(--tagink)}
+.tally b{display:block;font:700 34px Fredoka,sans-serif;line-height:1.1}
+.tally span{font:600 13px "JetBrains Mono",monospace}
+.pill .when.done{background:var(--oksoft);color:var(--ok)}
+a.when{text-decoration:none}
+.crates{display:flex;flex-wrap:wrap;align-content:flex-start;gap:6px;min-height:110px}
+.crate{display:inline-flex;align-items:center;background:#f4a259;color:#3a2000;border:2px solid #b8652a;border-radius:6px;padding:5px 9px;font:600 12.5px "JetBrains Mono",monospace;animation:pop .35s}
+.crate.big{background:#cdb8ff;border-color:#7c4dcc;color:#2a1260;font-size:16px;padding:12px 16px;animation:none}
+.lblchip{display:inline-block;margin:3px;padding:2px 8px;border-radius:999px;border:1.5px solid #7c4dcc;font:600 12px "JetBrains Mono",monospace;color:var(--petink);background:var(--petbg);animation:pop .35s}
+.wraps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:8px 0 12px}
+.wraps span{border:1.5px solid var(--line);border-radius:10px;padding:5px 8px;font:13px "JetBrains Mono",monospace;background:var(--bg);text-align:center;white-space:nowrap}
+.wrapviz{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);align-items:center;gap:8px;text-align:center;margin:8px 0 12px}
+.bare{width:88px;height:88px;margin:auto;border:3px dashed var(--mut);border-radius:12px;display:grid;place-items:center;font:600 36px Fredoka,sans-serif;background:var(--bg)}
+.gift{width:96px;height:96px;margin:auto;border-radius:12px;background:linear-gradient(var(--bad),var(--bad)) center/14px 100% no-repeat,linear-gradient(var(--bad),var(--bad)) center/100% 14px no-repeat,var(--tag);display:grid;place-items:center}
+.gift span{background:#fff;color:#151823;border-radius:50%;width:52px;height:52px;display:grid;place-items:center;font:600 26px Fredoka,sans-serif;border:3px solid var(--bad)}
+.gift.empty span{opacity:.2}
+.wrapviz .lab{font:600 12.5px "JetBrains Mono",monospace;color:var(--mut);margin-top:6px}
+.arrows{display:grid;gap:10px;font:700 12.5px "Nunito Sans",sans-serif;color:var(--mut)}
+.arrows div{border-radius:10px;padding:6px 4px;border:1.5px solid var(--line)}
+.arrows .on{border-color:var(--ok);background:var(--oksoft);color:var(--ok)}
+.kviz{position:relative}
+.kviz svg.wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:2}
+.slots{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+.slot{border:2px solid var(--ink);border-radius:6px;height:46px;display:grid;place-items:center;font:13px "JetBrains Mono",monospace;color:var(--mut);background:var(--bg)}
+.slot.ref{background:var(--bpsoft)}
+.slot.err{background:var(--badsoft);border-color:var(--bad);color:var(--bad);font-weight:700}
+.sidx{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;text-align:center;font:12px "JetBrains Mono",monospace;color:var(--mut);margin-top:2px}
+.pen{display:flex;gap:12px;margin-top:56px;flex-wrap:wrap;min-height:96px;align-items:flex-start}
+.pen .obj{display:grid;grid-template-columns:44px auto;gap:8px;align-items:center}
+.pen svg{width:44px;height:44px}
+.srow{display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:2px}
+.srow span{font:12px "JetBrains Mono",monospace;text-align:center;padding:6px 0;border:1px solid var(--line);border-radius:5px;background:var(--bg)}
+.srow .out{opacity:.3}
+.srow .now{background:var(--tagsoft);border-color:var(--tag);font-weight:700}
+.srow .mid{background:#ffcf9e;border-color:#e8954a;color:#3a2000;font-weight:700}
+.srow .fd{background:var(--oksoft);border-color:var(--ok);color:var(--ok);font-weight:800}
+.slab{display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:2px;font:700 10.5px "Nunito Sans",sans-serif;text-align:center;color:var(--bp);min-height:16px}
+.shead{display:flex;justify-content:space-between;gap:8px;font-weight:800;font-size:14px;margin:12px 0 4px}
+.shead span:last-child{color:var(--mut)}
+.antfig{position:relative;height:230px}
+.antfig svg{position:absolute;inset:0;width:100%;height:100%}
+.race{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
+.race div{border-radius:14px;padding:10px 12px;border:2px solid}
+.race .lin{border-color:var(--bad);background:var(--badsoft)}
+.race .bin{border-color:var(--bp);background:var(--bpsoft)}
+.race small{display:block;font-weight:800;font-size:13px;color:var(--mut)}
+.race b{font:600 clamp(20px,3vw,26px)/1.15 Fredoka,sans-serif}
+input[type=range]{width:100%;accent-color:var(--bp);min-height:44px;padding:0;border:0}
+.socket{border:2.5px solid var(--ink);border-radius:16px;padding:12px;text-align:center;max-width:260px;margin:0 auto;background:var(--bg);transition:background .25s,border-color .25s}
+.socket b{font:600 18px "JetBrains Mono",monospace;display:block}
+.socket i{display:inline-block;width:46px;height:28px;border:2.5px solid var(--ink);border-radius:8px;margin-top:6px;background:linear-gradient(90deg,transparent 10px,var(--ink) 10px 15px,transparent 15px 26px,var(--ink) 26px 31px,transparent 31px)}
+.socket.ok{border-color:var(--ok);background:var(--oksoft)}
+.socket.no{border-color:var(--bad);background:var(--badsoft)}
+.plugs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:22px}
+.plug{position:relative;min-height:64px;border-radius:8px 8px 16px 16px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font:600 13px "JetBrains Mono",monospace;cursor:pointer;padding:8px 6px;transition:transform .25s}
+.plug::before{content:"";position:absolute;top:-14px;left:50%;width:22px;height:13px;transform:translateX(-50%);background:linear-gradient(90deg,var(--ink) 0 5px,transparent 5px 17px,var(--ink) 17px 22px)}
+.plug.bad{border-style:dashed;border-color:var(--bad)}
+.plug.bad::before{background:linear-gradient(90deg,var(--bad) 0 5px,transparent 5px 17px,var(--bad) 17px 22px)}
+.plug.in{transform:translateY(-8px);background:var(--tagsoft)}
+.plug small{display:block;font:600 11.5px "Nunito Sans",sans-serif;color:var(--mut);margin-top:3px}
+.thumbs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0 14px}
+.thumbs div{border-radius:14px;padding:10px;text-align:center;border:2px solid var(--line);background:var(--bg)}
+.thumbs b{display:block;font:700 28px Fredoka,sans-serif;line-height:1.1}
+.thumbs span{font-size:14px}
+.thumbs span b{display:inline;font:inherit;font-weight:800;color:inherit}
+.thumbs .neg{border-color:var(--bp)}.thumbs .neg b{color:var(--bp)}
+.thumbs .pos{border-color:var(--bad)}.thumbs .pos b{color:var(--bad)}
+.thumbs .on{background:var(--tagsoft);border-color:var(--tag)}
+.lane{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.sc{background:var(--tag);color:var(--tagink);border-radius:12px;padding:6px 8px;text-align:center;font:12px/1.4 "JetBrains Mono",monospace;position:relative}
+.sc svg{width:40px;height:40px;display:block;margin:0 auto}
+.sc b{display:block;font:600 15px Fredoka,sans-serif}
+.sc .pos{position:absolute;top:4px;left:6px;font:800 11px "Nunito Sans",sans-serif;opacity:.6}
+.ptick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:12px 0}
+.ptick span{border-radius:10px;padding:6px 8px;font-weight:800;font-size:13.5px;text-align:center;background:var(--oksoft);color:var(--ok);border:1.5px solid var(--ok)}
+.ptick span.new{background:var(--tag);color:var(--tagink);border-color:var(--tag)}
+.critter{width:110px;height:110px;margin:0 auto;display:block}
+@media(max-width:600px){.par,.wraps,.thumbs{grid-template-columns:repeat(2,minmax(0,1fr))}.plugs,.ptick{grid-template-columns:repeat(2,minmax(0,1fr))}.lane{grid-template-columns:repeat(2,minmax(0,1fr))}.srow span{font-size:10.5px;padding:5px 0}.slab{font-size:9px}.race{grid-template-columns:minmax(0,1fr)}}
+/* games */
+.game{background:var(--gamebg)}
+.game .story{background:var(--bg)}
+.game h2{color:var(--ink)}
+.gdots{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.gdots svg{width:24px;height:24px;fill:var(--bp)}
+.gdots svg.used{fill:var(--line)}
+.gstrip{display:grid;grid-template-columns:repeat(100,minmax(0,1fr));gap:1px;height:44px}
+.gstrip i{background:var(--tag);border-radius:2px;transition:background .3s}
+.gstrip i.x{background:var(--line)}
+.gstrip i.g{background:var(--bp)}
+.gstrip i.w{background:var(--ok)}
+.glabels{display:flex;justify-content:space-between;gap:8px;font:12.5px "JetBrains Mono",monospace;color:var(--mut);margin-top:3px}
+.gsay{margin-top:12px;font-weight:700;min-height:1.6em}
+.gsay.good{color:var(--ok)}.gsay.bad{color:var(--bad)}
+.sl{display:grid;gap:0}
+.srow2{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--tag);color:var(--tagink);border-radius:12px;padding:6px 12px;cursor:pointer;border:3px solid transparent;min-height:58px;width:100%;text-align:left;font:13px "JetBrains Mono",monospace}
+.srow2 svg{width:44px;height:44px}
+.srow2 b{display:block;font:600 18px Fredoka,sans-serif}
+.srow2:hover{border-color:color-mix(in srgb,var(--tagink) 30%,transparent)}
+.srow2.sel{border-color:var(--bp);box-shadow:0 0 0 4px color-mix(in srgb,var(--bp) 35%,transparent);transform:scale(1.02)}
+.srow2.won{animation:hop .5s both}
+@keyframes hop{40%{transform:translateY(-8px)}}
+.cmpPill{justify-self:center;margin:4px 0;font:700 12px "JetBrains Mono",monospace;padding:3px 12px;border-radius:999px;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.cmpPill.ok{background:var(--oksoft);color:var(--ok)}
+.cmpPill.bad{background:var(--badsoft);color:var(--bad);outline:1.5px solid var(--bad)}
+.cmpPill.tie{background:var(--card);color:var(--mut)}
+.cab{background:var(--bg);border:3px solid var(--ink);border-radius:22px;padding:clamp(14px,2.5vw,26px);max-width:880px;box-shadow:0 7px 0 var(--ink)}
+.hud{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;font-weight:700;font-size:15px;margin-bottom:14px;padding-bottom:12px;border-bottom:2px dashed var(--line)}
+.hud b{font:700 21px Fredoka,sans-serif;font-variant-numeric:tabular-nums}
+.bones{display:flex;gap:4px}
+.bones svg{width:36px;height:15px;fill:var(--tag);stroke:var(--tagink);stroke-width:1.4}
+.bones svg.lost{fill:var(--line);stroke:var(--line)}
+.tbar{height:10px;border-radius:999px;background:var(--line);overflow:hidden;margin-top:10px}
+.tbar i{display:block;height:100%;width:100%;background:var(--ok)}
+.ansrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+.ab{min-height:62px;border-radius:14px;border:2.5px solid;font:800 16px "Nunito Sans",sans-serif;cursor:pointer;background:var(--bg)}
+.ab small{display:block;font-weight:600;font-size:12px;opacity:.65}
+.ab.k1{border-color:var(--ok);color:var(--ok)}.ab.k2{border-color:var(--bp);color:var(--bp)}.ab.k3{border-color:var(--bad);color:var(--bad)}
+.ab:hover:not(:disabled){background:var(--card)}
+.ab:disabled{cursor:default;opacity:.55}
+.ab.right{background:var(--oksoft);opacity:1}.ab.wrong{background:var(--badsoft);opacity:1}
+.ab:focus-visible{outline:3px solid var(--tag);outline-offset:2px}
+.pts{font:700 19px Fredoka,sans-serif;color:var(--ok);display:inline-block;animation:pop .4s}
+.rank{font:700 clamp(30px,5vw,46px)/1.1 Fredoka,sans-serif;margin:4px 0;color:var(--bp)}
+@media(max-width:600px){.ansrow{grid-template-columns:minmax(0,1fr)}.ab{min-height:52px}.cmpPill{font-size:11px}}
+footer{padding:28px max(5vw,16px);color:var(--mut);font-size:14px;border-top:1px solid var(--line)}
+
+@media(max-width:900px){.pillars{grid-template-columns:repeat(2,minmax(0,1fr))}.cheat{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:820px){
+.two,.two.flip{grid-template-columns:minmax(0,1fr)}
+.two>.txt{order:0}.two.flip>.txt{order:0}
+.two>.toy{order:1}
+.factory{grid-template-columns:minmax(0,1fr)}
+.arrowcol{grid-auto-flow:column;align-items:center}
+.arrowcol svg{transform:rotate(90deg);width:40px}
+}
+@media(max-width:600px){
+.cmp,.defs,.rest,.speech{grid-template-columns:minmax(0,1fr)}
+.cheat{grid-template-columns:minmax(0,1fr)}
+.capsule{border-radius:28px;grid-template-columns:minmax(0,1fr)}
+table{font-size:13px}th,td{padding:6px 4px}
+.stack thead{display:none}.stack tr{display:grid;padding-block:8px;border-bottom:1px solid var(--line)}.stack td{display:flow-root;border:0;padding:3px 0 3px 7.5em}.stack td::before{content:attr(data-l);float:left;width:7em;margin-left:-7.5em;font-weight:800;color:var(--mut)}.stack td:empty{display:none}
+.mem{column-gap:34px}
+.arr .r{grid-template-columns:52px repeat(6,minmax(0,1fr))}
+.arr{font-size:11.5px}
+.mini-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+</style>
+<script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+ <defs>
+  <symbol id="dog" viewBox="0 0 100 100">
+   <ellipse cx="50" cy="93" rx="30" ry="4.5" fill="#000" opacity=".13"/>
+   <path d="M24 28C9 31 7 58 17 70C27 64 30 46 32 34Z" fill="var(--ear,#8a5a2b)"/>
+   <path d="M76 28C91 31 93 58 83 70C73 64 70 46 68 34Z" fill="var(--ear,#8a5a2b)"/>
+   <circle cx="50" cy="51" r="31" fill="var(--fur,#d9a35b)"/>
+   <path d="M50 20a31 31 0 0 1 28 18c-9-6-19-8-28-8s-19 2-28 8a31 31 0 0 1 28-18z" fill="#fff" opacity=".18"/>
+   <ellipse cx="50" cy="66" rx="16" ry="12" fill="var(--muz,#f3dcb8)"/>
+   <circle cx="39" cy="47" r="3.8" fill="#1b1b1b"/><circle cx="61" cy="47" r="3.8" fill="#1b1b1b"/>
+   <circle cx="40.3" cy="45.7" r="1.2" fill="#fff"/><circle cx="62.3" cy="45.7" r="1.2" fill="#fff"/>
+   <ellipse cx="50" cy="59.5" rx="6" ry="4.3" fill="#1b1b1b"/>
+   <path d="M50 64v4M43.5 69q6.5 5.5 13 0" stroke="#1b1b1b" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="bea" viewBox="0 0 60 60">
+   <circle cx="30" cy="30" r="30" fill="#1450c8"/>
+   <path d="M11 60q0-17 19-17t19 17z" fill="#fff"/>
+   <path d="M26 43h8l-4 7z" fill="#ffc93c"/>
+   <path d="M17 31q-2 9 4 13h18q6-4 4-13z" fill="#5a3a22"/>
+   <circle cx="30" cy="29" r="11" fill="#f1c7a3"/>
+   <path d="M17 24q13-15 26 0z" fill="#ffc93c"/><rect x="15" y="22" width="26" height="4" rx="2" fill="#e0a800"/>
+   <circle cx="26" cy="30" r="1.6" fill="#1b1b1b"/><circle cx="34" cy="30" r="1.6" fill="#1b1b1b"/>
+   <path d="M26 35q4 3 8 0" stroke="#1b1b1b" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="bone" viewBox="0 0 40 16"><rect x="6" y="5" width="28" height="6" rx="3"/><circle cx="6" cy="5" r="4"/><circle cx="6" cy="11" r="4"/><circle cx="34" cy="5" r="4"/><circle cx="34" cy="11" r="4"/></symbol>
+  <symbol id="paw" viewBox="0 0 24 24"><ellipse cx="12" cy="16.5" rx="5.5" ry="4.5"/><circle cx="4.8" cy="10.5" r="2.4"/><circle cx="9.4" cy="5.8" r="2.4"/><circle cx="14.6" cy="5.8" r="2.4"/><circle cx="19.2" cy="10.5" r="2.4"/></symbol>
+  <symbol id="cat" viewBox="0 0 100 100">
+   <ellipse cx="50" cy="93" rx="28" ry="4.5" fill="#000" opacity=".13"/>
+   <path d="M22 44L26 12L46 30Z" fill="var(--fur,#e8954a)"/><path d="M78 44L74 12L54 30Z" fill="var(--fur,#e8954a)"/>
+   <path d="M28 36L29 21L39 30Z" fill="#f6b7c4"/><path d="M72 36L71 21L61 30Z" fill="#f6b7c4"/>
+   <ellipse cx="50" cy="56" rx="31" ry="28" fill="var(--fur,#e8954a)"/>
+   <path d="M36 32q14-6 28 0" stroke="#b86425" stroke-width="3" fill="none" stroke-linecap="round"/>
+   <ellipse cx="38" cy="53" rx="4" ry="5" fill="#1b1b1b"/><ellipse cx="62" cy="53" rx="4" ry="5" fill="#1b1b1b"/>
+   <circle cx="39.2" cy="51.5" r="1.2" fill="#fff"/><circle cx="63.2" cy="51.5" r="1.2" fill="#fff"/>
+   <path d="M46 63h8l-4 4z" fill="#d9536e"/>
+   <path d="M50 67q-4 5-9 2M50 67q4 5 9 2M18 61l16 2M18 69l16-2M82 61l-16 2M82 69l-16-2" stroke="#1b1b1b" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  </symbol>
+ </defs>
+</svg>
+
+<header class="band hero" id="top">
+ <div class="wrap">
+  <h1>Object-oriented programming, one dog at a time</h1>
+  <p class="lede">You have just been hired as the programmer at <b>Tiger Paws Day Camp</b>. The director, Bea, runs a camp for 100 dogs on paper forms. Over the next few weeks you will turn her camp into software, and learn object-oriented programming on the way.</p>
+  <p class="lede">Your first trick for Bea: a <b>class</b> is a blueprint you write once; an <b>object</b> is one real dog built from it. Fill in the form and press the yellow button. Every toy you try on this page earns a paw badge (the counter is in the menu bar), and three mini games are waiting along the way, ending with the Front Desk Rush arcade.</p>
+  <div class="factory">
+   <div class="blueprint" aria-label="The Dog class blueprint">
+    <span class="stamp">class = blueprint</span>
+    <div class="bt">class Dog</div>
+    <div class="sec">fields: what every dog has</div>
+    name · breed · age · daysAttended
+    <div class="sec">methods: what every dog does</div>
+    bark() · eat() · play() · checkIn()
+   </div>
+   <div class="arrowcol" aria-hidden="true">
+    <svg viewBox="0 0 64 40"><path d="M2 20H52" stroke="#ffc93c" stroke-width="5" stroke-linecap="round"/><path d="M44 8L60 20L44 32Z" fill="#ffc93c"/></svg>
+    <span>new</span>
+   </div>
+   <div>
+    <div class="kennel" id="kennel" aria-live="polite"></div>
+   </div>
+  </div>
+  <form class="form" id="hform" autocomplete="off">
+   <label>name<input id="hName" value="Bella" maxlength="12" size="9"></label>
+   <label>breed<select id="hBreed"></select></label>
+   <label>age<input id="hAge" type="number" min="0" max="30" value="5" style="width:84px"></label>
+   <button class="btn" type="submit">new Dog(…)</button>
+   <button class="btn ghost" type="button" id="hReset">Reset camp</button>
+  </form>
+  <div class="liveline" id="hLine"></div>
+  <div class="note" id="hNote" style="margin-top:14px"><p>Press <b>checkIn()</b> on any one card. Only that dog's <code style="background:transparent;color:#ffe9a8">daysAttended</code> goes up: every object keeps its own data.</p></div>
+ </div>
+</header>
+
+<nav class="toc" aria-label="Sections"><div class="bar"><div class="scroll"><span class="sep">Part 1</span>
+ <a href="#why">Why OOP</a><a href="#camp">100 dogs</a><a href="#words">Class vs object</a><a href="#java">Writing a class</a><a href="#new">new &amp; memory</a><a href="#dot">The dot</a><a href="#ctor">Constructors</a><a href="#overload">Overloading</a><a href="#tostring">toString()</a><a href="#equals">equals()</a><a href="#static">static</a><a href="#encap">Encapsulation</a><a href="#api">API</a><a href="#inherit">Inheritance</a><a href="#override">Overriding</a><a href="#quiz">Check yourself</a><span class="sep">Part 2</span><a href="#generics">Generics</a><a href="#wrappers">Wrappers</a><a href="#dogarray">Arrays of objects</a><a href="#search">Searching</a><a href="#ants">Ant race</a><a href="#guess">Game: guess</a><a href="#sorting">Sorting</a><a href="#compareto">compareTo()</a><a href="#besort">Game: sort</a><a href="#poly">Polymorphism</a><a href="#rush">Game: Front Desk Rush</a><a href="#quiz2">Check yourself 2</a>
+</div><div class="paws" title="Paw badges earned"><svg aria-hidden="true"><use href="#paw"/></svg><span id="pawN">0</span>/<span id="pawT">0</span></div></div></nav>
+<div class="toast" id="toast" role="status" aria-live="polite"><svg aria-hidden="true"><use href="#paw"/></svg><span id="toastTxt"></span></div>
+
+<!-- 1 WHY -->
+<section class="band" id="why"><div class="wrap two">
+ <div class="txt">
+  <h2>Why we need our own data types</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Monday, 8:00 a.m.</b> Bea drops a stack of paper forms on your desk. "Java knows numbers and words," she says. "I need it to know about <i>dogs</i>. Oh, and paint colors for the kennel signs."</p></div>
+  <p>Java gives you built-in types like <code>int</code>, <code>double</code>, <code>boolean</code> and <code>String</code>. They are great for numbers and words, but the world is full of other things: colors, cars, buildings, robot states, sensor readings.</p>
+  <p>We want to say <code>Color mix = red.mix(yellow);</code> and get orange. OOP lets us invent the type <code>Color</code> and teach it what <code>mix</code> means.</p>
+  <h3>Abstract Data Type (ADT)</h3>
+  <p>An ADT is a type described by <b>what you can do with it</b>, not by how it works inside. You drive a car with a wheel and pedals; you do not need to know how the engine is built. That is abstraction.</p>
+  <div class="tw"><table class="stack"><thead><tr><th></th><th>ADT</th><th>Data structure</th></tr></thead><tbody>
+   <tr><td>What it is</td><td>An idea: the list of operations</td><td>The real build: how data sits in memory</td></tr>
+   <tr><td>Answers</td><td><b>What</b> can I do?</td><td><b>How</b> is it done?</td></tr>
+   <tr><td>Restaurant</td><td>The menu</td><td>The kitchen</td></tr>
+  </tbody></table></div>
+  <h3>Real life is objects talking to each other</h3>
+  <p>A person orders coffee from a shop; a dog follows its owner across the street at the traffic light. Big programs are built the same way. In a video game nobody thinks "instruction 4,512"; they think of cars, characters and traffic lights, each with its own data and behavior. That is OOP: model the software the way you already think about the world, so large programs stay organized and each object looks after itself.</p>
+  <h3>OOP is one style among several</h3>
+  <div class="par">
+   <div><b>Procedural</b><span>A list of steps run top to bottom. Example: C.</span></div>
+   <div class="me"><b>Object-oriented</b><span>Objects with data and behavior that talk to each other. Example: Java.</span></div>
+   <div><b>Functional</b><span>Programs built from functions that take values and return values. Example: Haskell.</span></div>
+  </div>
+  <p>These styles are called programming <b>paradigms</b>. Most modern languages mix them: Java is mainly object-oriented, with functional features too.</p>
+  <p class="src">Slides 2–15.</p>
+ </div>
+ <div class="toy panel">
+  <p class="ptitle">Toy: a Color type with a mix() operation</p>
+  <p style="font-size:15px;margin-bottom:8px">Pick the object on the left of the dot, then the one inside the parentheses.</p>
+  <div style="display:grid;gap:10px">
+   <div><div class="src">first color (the object)</div><div class="chips" id="mixA"></div></div>
+   <div><div class="src">second color (the argument)</div><div class="chips" id="mixB"></div></div>
+  </div>
+  <div class="mixout">
+   <div class="blob" id="mixBlob"></div>
+   <div><div class="console" id="mixCode" style="min-height:0"></div><p id="mixSay" style="margin:8px 0 0;font-weight:700"></p></div>
+  </div>
+  <div class="note"><p>You never see <i>how</i> mix() works. You only use it. That is exactly what "abstract" means.</p></div>
+  <p class="ptitle" style="margin-top:20px">Think first: what is a Student? A Car?</p>
+  <p style="font-size:15px;margin-bottom:8px">Before you tap, list in your head what each one <b>has</b> and what it <b>does</b>.</p>
+  <div class="row" id="think"><button class="btn" data-k="s">Student</button><button class="btn" data-k="c">Car</button><button class="btn" data-k="d">Dog</button></div>
+  <div class="note" id="thinkSay"><p>Tap one to compare with your guess.</p></div>
+ </div>
+</div></section>
+
+<!-- 2 CAMP -->
+<section class="band alt" id="camp"><div class="wrap two flip">
+ <div class="txt">
+  <h2>The problem: a camp with 100 dogs</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Monday, 10:00 a.m.</b> Your first try: six arrays, one per fact. By lunch, Luna has been credited with Bella's visit, and Bella's owner is on the phone. Try the typo button to see how it happened.</p></div>
+  <p>You run a dog-sitting camp. For every dog you track a name, breed, color, weight, age and days attended. 100 dogs × 6 facts = 600 facts.</p>
+  <p><b>Without a class</b> you keep six separate arrays, one per fact. Dog number 3 is "whatever sits at index 3 in all six arrays". One wrong index and you update the wrong dog, with no error message.</p>
+  <p><b>With a class</b> each dog's facts live together in one bundle, and the actions (like <code>checkIn()</code>) are attached to that bundle. There is no index to mistype.</p>
+  <div class="note"><p><b>Key insight:</b> a class does not delete information. We still have 600 facts. It <b>organizes</b> them so each dog's details stay together. Write the description once, make many dogs.</p></div>
+  <p class="src">Slides 17–22.</p>
+ </div>
+ <div class="toy panel">
+  <p class="ptitle">Toy: Bella checks in, two ways</p>
+  <div class="cmp">
+   <div><div class="src" style="margin-bottom:6px">Six parallel arrays</div><div class="arr" id="arrView"></div></div>
+   <div><div class="src" style="margin-bottom:6px">One object per dog</div><div class="mini-cards" id="objView"></div></div>
+  </div>
+  <div class="row" style="margin-top:12px">
+   <button class="btn code" id="cGood">days[3]++</button>
+   <button class="btn code warn" id="cBad">days[1]++ (typo!)</button>
+   <button class="btn code" id="cObj">bella.checkIn()</button>
+   <button class="btn ghost" id="cReset">Reset</button>
+  </div>
+  <div class="console" id="cOut" style="margin-top:10px"></div>
+ </div>
+</div></section>
+
+<!-- 3 WORDS -->
+<section class="band" id="words"><div class="wrap two">
+ <div class="txt">
+  <h2>Four words: class, object, field, method</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Monday, 2:00 p.m.</b> You draw one blueprint on the whiteboard, with arrows to many dogs. Bea squints: "So the drawing is the class, and each dog is an object?" Exactly. Time to learn the four words everybody uses.</p></div>
+  <div class="defs">
+   <div class="def"><svg viewBox="0 0 160 84"><rect x="6" y="8" width="70" height="68" rx="4" fill="var(--bp)"/><path d="M16 22h50M16 34h36M16 46h44M16 58h28" stroke="#fff" stroke-width="3" opacity=".8"/><path d="M86 42h18" stroke="var(--mut)" stroke-width="3"/><path d="M100 34l10 8-10 8z" fill="var(--mut)"/><text x="130" y="48" text-anchor="middle" font-size="12" font-weight="700" fill="var(--mut)" font-family="Nunito Sans,sans-serif">one</text></svg><b>Class</b><span>The blueprint or cookie cutter. You write it once.</span></div>
+   <div class="def"><svg viewBox="0 0 160 84"><g style="--fur:#f2ece2;--ear:#ddd2bf"><use href="#dog" x="4" y="10" width="62" height="62"/></g><g style="--fur:#c98a45;--ear:#6b3f1d"><use href="#dog" x="50" y="10" width="62" height="62"/></g><g style="--fur:#9aa3ad;--ear:#5c6470"><use href="#dog" x="96" y="10" width="62" height="62"/></g></svg><b>Object (instance)</b><span>One real thing made from the class. Make as many as you like.</span></div>
+   <div class="def"><svg viewBox="0 0 160 84"><rect x="20" y="14" width="120" height="56" rx="10" fill="var(--tag)"/><text x="34" y="38" font-size="14" font-family="JetBrains Mono,monospace" fill="#3a2a00">name: "Rex"</text><text x="34" y="58" font-size="14" font-family="JetBrains Mono,monospace" fill="#3a2a00">age: 3</text></svg><b>Field</b><span>What an object <i>has</i> or knows. Nouns: name, age, breed.</span></div>
+   <div class="def"><svg viewBox="0 0 160 84"><g style="--fur:#c98a45;--ear:#6b3f1d"><use href="#dog" x="10" y="12" width="62" height="62"/></g><rect x="78" y="18" width="74" height="34" rx="14" fill="var(--bp)"/><path d="M84 52l-10 10 2-12z" fill="var(--bp)"/><text x="115" y="40" text-anchor="middle" font-size="15" font-weight="700" font-family="Fredoka,sans-serif" fill="#fff">Woof!</text></svg><b>Method</b><span>What an object <i>does</i>. Verbs: bark(), eat(), checkIn().</span></div>
+  </div>
+  <h3>The class drawn as a UML diagram</h3>
+  <p style="font-size:15px">Engineers draw a class as a box with three parts: name, fields, methods. Everyone reads the same "floor plan".</p>
+  <div class="uml"><div class="nm">Dog</div><div>- name: String<br>- breed: String<br>- age: int<br>- daysAttended: int</div><div>+ bark(): void<br>+ eat(): void<br>+ checkIn(): void</div></div>
+  <p class="src" style="margin-top:10px">Slides 23–33. In UML, <code>-</code> means private and <code>+</code> means public. You will meet those words in Encapsulation.</p>
+ </div>
+ <div class="toy panel">
+  <p class="ptitle">Toy: sort the Dog's parts</p>
+  <p style="font-size:15px">Tap a word, then tap the box it belongs in. Ask yourself: is it something a dog <b>has</b>, or something a dog <b>does</b>?</p>
+  <div id="pool" style="min-height:52px"></div>
+  <div class="bins">
+   <div class="bin" id="binF" role="button" tabindex="0"><h4>Fields <small>has (noun)</small></h4><div></div></div>
+   <div class="bin" id="binM" role="button" tabindex="0"><h4>Methods <small>does (verb)</small></h4><div></div></div>
+  </div>
+  <p id="sortMsg" style="margin:10px 0 0;font-weight:700;min-height:1.6em"></p>
+  <div class="row"><button class="btn ghost" id="sortReset">Start over</button></div>
+  <div class="note"><p>Hint from the code: methods always end with <code>()</code>. The parentheses are where you hand the method extra information.</p></div>
+ </div>
+</div></section>
+
+<!-- 4 JAVA -->
+<section class="band alt" id="java"><div class="wrap two flip">
+ <div class="txt">
+  <h2>Writing the class in Java</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Tuesday, 9:00 a.m.</b> Coffee in hand, you turn the whiteboard sketch into a real file: <code>Dog.java</code>.</p></div>
+  <p>A class file has two kinds of lines inside its curly braces: <b>field declarations</b> (the data) and <b>method definitions</b> (the actions). Tap the buttons to light up each part.</p>
+  <div class="row" id="javaLegend" style="margin-bottom:12px">
+   <button class="btn" data-g="h">Class header</button><button class="btn" data-g="f">Fields</button><button class="btn" data-g="m">Methods</button><button class="btn ghost" data-g="">All</button>
+  </div>
+  <h3>Anatomy of a method header</h3>
+  <p style="font-size:15px">Tap each piece.</p>
+  <div class="anat" id="anat"></div>
+  <div class="note" id="anatSay"><p>Tap a piece above.</p></div>
+  <p class="src">Slides 34–37. Inside a method, plain <code>name</code> means "the name of the dog this method was called on".</p>
+ </div>
+ <div class="toy"><pre class="java" id="javaCode"></pre></div>
+</div></section>
+
+<!-- 5 NEW -->
+<section class="band" id="new"><div class="wrap two">
+ <div class="txt">
+  <h2>What <code style="font-size:.8em">new</code> really does in memory</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Tuesday, 10:30 a.m.</b> Daisy the poodle arrives. Time to create your first real object, and to peek at what happens inside the computer's memory when you do.</p></div>
+  <p>Step through the code with <b>Next</b>. Watch the left column (variables, like name tags) and the right column (the actual objects in memory).</p>
+  <ul class="clean">
+   <li><code>Dog daisy;</code> makes a name tag. No dog yet.</li>
+   <li><code>new Dog()</code> builds the object and hands back its <b>address</b>.</li>
+   <li>A variable of a class type stores that address, not the dog itself. The arrow shows where it points.</li>
+   <li>Building an object with <code>new</code> is called <b>instantiation</b>. You can declare and instantiate in one line: <code>Dog daisy = new Dog();</code></li>
+   <li>Object names follow the same style as variables: lowerCamelCase, like <code>daisy</code> or <code>myDog</code>.</li>
+  </ul>
+  <div class="note"><p>This is why <code>Dog alias = daisy;</code> does <b>not</b> copy the dog. It copies the arrow. Two tags, one dog.</p></div>
+  <p class="src">Slides 38–45. Addresses like 5432 are made up for the picture; Java chooses real ones for you. Optional: each object costs a small header (about 12–16 bytes on a typical 64-bit JVM: a reference to its class plus garbage-collector info), plus its fields, rounded up to a multiple of 8 bytes.</p>
+ </div>
+ <div class="toy panel">
+  <pre class="java" id="memCode" style="margin-bottom:12px"></pre>
+  <div class="stepper">
+   <button class="btn ghost" id="memBack">Back</button><button class="btn solid" id="memNext">Next</button><button class="btn ghost" id="memReset">Restart</button><span class="cnt" id="memCnt"></span>
+  </div>
+  <div class="mem" id="mem">
+   <svg class="wires" id="memWires"></svg>
+   <div class="colh">Variables</div><div class="colh">Objects in memory</div>
+   <div class="vars" id="memVars"></div><div class="objs" id="memObjs"></div>
+  </div>
+  <div class="console" id="memOut" style="margin-top:12px"></div>
+  <div class="note" id="memNote"></div>
+ </div>
+</div></section>
+
+<!-- 6 DOT -->
+<section class="band alt" id="dot"><div class="wrap two flip">
+ <div class="txt">
+  <h2>The dot: talk to one object</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Tuesday, noon.</b> Daisy is in the system. Now you want to talk to her: make her bark, check her in. Then Max shows up, and you need to talk to him without bothering Daisy.</p></div>
+  <p>To use an object's field or method, write the object's name, a dot, then the member: <code>daisy.bark();</code> Read the dot as <b>"daisy's"</b>.</p>
+  <p>You have been doing this since the rover labs:</p>
+  <pre class="java" id="roverCode"></pre>
+  <p style="margin-top:12px">Two kinds of methods:</p>
+  <ul class="clean">
+   <li><b>void</b> methods <i>do</i> something and give nothing back: <code>daisy.bark();</code></li>
+   <li><b>returning</b> methods hand back a value you can store: <code>int h = daisy.getAgeInHumanYears();</code></li>
+  </ul>
+  <p class="src">Slides 45–48. Even <code>main</code> is a method; Java calls it for you when the program starts.</p>
+ </div>
+ <div class="toy panel">
+  <p class="ptitle">Toy: pick a dog, then call its methods</p>
+  <div class="seg" id="dotWho" role="group" aria-label="Choose object"><button aria-pressed="true" data-w="daisy">daisy</button><button aria-pressed="false" data-w="max">max</button></div>
+  <div style="display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px;align-items:center;margin:14px 0">
+   <svg viewBox="0 0 100 100" id="dotDog" style="width:96px;height:96px"><use href="#dog"/></svg>
+   <div class="obj" id="dotCard" style="animation:none"></div>
+  </div>
+  <div class="row" id="dotBtns"></div>
+  <div class="console" id="dotOut" style="margin-top:12px"></div>
+ </div>
+</div></section>
+
+<!-- 7 CTOR -->
+<section class="band" id="ctor"><div class="wrap two">
+ <div class="txt">
+  <h2>Constructors: the check-in form</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Wednesday, 8:15 a.m.</b> The morning rush. Every check-in takes five lines of code, and an intern forgot to set Rex's breed. Bea: "Can't we have one form that fills in everything at once?"</p></div>
+  <p>Setting every field by hand after <code>new</code> is tedious and easy to forget. A <b>constructor</b> is a special method that runs automatically during <code>new</code> and fills in the fields in one go.</p>
+  <ul class="clean">
+   <li>Its name is <b>exactly</b> the class name: <code>Dog</code>.</li>
+   <li>It has <b>no return type</b>, not even <code>void</code>.</li>
+   <li>It runs once per object, at birth.</li>
+  </ul>
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;text-align:center;margin:14px 0">
+   <div class="def" style="padding:10px"><b style="font-size:16px">Class</b><span>pattern for a car</span></div>
+   <div class="def" style="padding:10px"><b style="font-size:16px">Constructor</b><span>the factory steps that build one</span></div>
+   <div class="def" style="padding:10px"><b style="font-size:16px">Objects</b><span>as many cars as you like</span></div>
+  </div>
+  <h3>The keyword <code style="font-size:.85em">this</code></h3>
+  <p>Inside the constructor there are two things called <code>name</code>: the <b>parameter</b> (the value just handed in) and the <b>field</b> (the dog's own slot). <code>this.name</code> means "the field of the object being built". Turn on "forget this" to see what breaks.</p>
+  <div class="note"><p><b>Recipe for your own data type:</b> instance variables (the values) + constructors (create and set up new objects) + methods (the operations), plus a small test client, usually a <code>main</code>, that tries it out.</p></div>
+  <p class="src">Slides 49–53, 57.</p>
+ </div>
+ <div class="toy panel">
+  <p class="ptitle">Toy: run the constructor</p>
+  <div class="row" style="align-items:end">
+   <label>name<input id="cName" value="Rex" maxlength="12" size="8"></label>
+   <label>breed<select id="cBreed"></select></label>
+   <label>age<input id="cAge" type="number" min="0" max="30" value="4" style="width:80px"></label>
+  </div>
+  <div class="row" style="margin:12px 0">
+   <div class="seg" id="thisSeg" role="group" aria-label="this keyword"><button aria-pressed="true" data-v="1">with this.</button><button aria-pressed="false" data-v="0">forget this.</button></div>
+  </div>
+  <div class="liveline" id="cCall" style="color:var(--bp);margin:0 0 8px;font-weight:600"></div>
+  <pre class="java" id="cCode"></pre>
+  <div style="display:grid;grid-template-columns:72px minmax(0,1fr);gap:12px;align-items:center;margin-top:12px">
+   <svg viewBox="0 0 100 100" id="cDog" style="width:72px;height:72px"><use href="#dog"/></svg>
+   <div class="obj" id="ctorObj" style="animation:none"></div>
+  </div>
+  <div class="note" id="cNote"></div>
+ </div>
+</div></section>
+
+<!-- 8 OVERLOAD -->
+<section class="band alt" id="overload"><div class="wrap two flip">
+ <div class="txt">
+  <h2>Overloading: several ways to check in a dog</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Wednesday, 11:00 a.m.</b> A stray wanders in with no collar. Ten minutes later a dog arrives whose owner only knows his name. Your constructor demands three answers. Now what?</p></div>
+  <p>A class can have <b>several constructors</b> with the same name, as long as their parameter lists differ (in number, types or order). Java looks at the arguments you pass and picks the one that matches.</p>
+  <div class="note bad"><p><b>Not allowed:</b> two constructors with the same parameter types. Parameter <i>names</i> don't count.</p><pre class="java" style="margin-top:8px" id="olBad"></pre></div>
+  <h3>The free default constructor</h3>
+  <p>If you write <b>no</b> constructor at all, Java quietly adds <code>public Dog() { }</code>. Fields then start at default values:</p>
+  <div class="tw"><table><thead><tr><th>Field type</th><th>Default</th><th>Example</th></tr></thead><tbody>
+   <tr><td><code>int</code>, <code>long</code></td><td class="mono">0</td><td>age, daysAttended</td></tr>
+   <tr><td><code>double</code></td><td class="mono">0.0</td><td>weight</td></tr>
+   <tr><td><code>boolean</code></td><td class="mono">false</td><td>vaccinated</td></tr>
+   <tr><td><code>String</code>, any object</td><td class="mono">null</td><td>name, breed</td></tr>
+  </tbody></table></div>
+  <div class="note"><p><b>Gotcha:</b> once you write <i>any</i> constructor, the free one disappears. If <code>Dog</code> only has <code>Dog(String, String, int)</code>, then <code>new Dog()</code> is a compile error. Write <code>public Dog() { … }</code> yourself if you want it.</p></div>
+  <p class="src">Slides 54–61.</p>
+ </div>
+ <div class="toy panel">
+  <p class="ptitle">Toy: which constructor runs?</p>
+  <div class="row" id="olBtns"></div>
+  <pre class="java" id="olCode" style="margin-top:12px"></pre>
+  <div class="console" id="olOut" style="margin-top:12px"></div>
+ </div>
+</div></section>
+
+<!-- 9 TOSTRING -->
+<section class="band" id="tostring"><div class="wrap two">
+ <div class="txt">
+  <h2><code style="font-size:.8em">toString()</code>: how an object prints itself</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Thursday, 9:00 a.m.</b> You print the attendance sheet for Bea. It reads <code>Dog@1b6d3586</code>. "Who," she asks slowly, "is Dog@1b6d3586?"</p></div>
+  <p>When you write <code>System.out.println(daisy)</code> or glue an object onto a String with <code>+</code>, Java secretly calls <code>daisy.toString()</code>.</p>
+  <p>Every class gets a default <code>toString()</code>, but it is not helpful: it prints the class name, an <code>@</code>, and a hash code in hex, like <code>Dog@1b6d3586</code>. The number changes from run to run.</p>
+  <p>So we write our own and <b>override</b> the default. You decide what a dog looks like as text.</p>
+  <div class="note"><p><code>"Tag: " + daisy</code> works because one side is a String. <code>String s = daisy + 7;</code> does not compile: neither side is a String, so Java won't call toString().</p></div>
+  <p class="src">Slides 62–64.</p>
+ </div>
+ <div class="toy panel">
+  <p class="ptitle">Toy: add or remove toString()</p>
+  <div class="seg" id="tsSeg" role="group" aria-label="toString"><button aria-pressed="false" data-v="0">no toString()</button><button aria-pressed="true" data-v="1">with toString()</button></div>
+  <pre class="java" id="tsCode" style="margin:12px 0"></pre>
+  <div class="console" id="tsOut"></div>
+ </div>
+</div></section>
+
+<!-- 10 EQUALS -->
+<section class="band alt" id="equals"><div class="wrap two flip">
+ <div class="txt">
+  <h2>When are two dogs "equal"?</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Thursday, 11:00 a.m.</b> The vet notices Daisy has two files, one from Monday and one from Tuesday. Your code insists they are two different dogs.</p></div>
+  <p><b>Monday:</b> Daisy checks in, and the front desk creates a <code>Dog</code> object. <b>Tuesday:</b> someone types her in again, making a <i>second</i> object. Same dog?</p>
+  <p>Java can't know what "same dog" means for <i>our</i> camp. We decide, and put the rule in an <code>equals()</code> method. Here: same camp tag <code>id</code> means same dog.</p>
+  <div class="tw"><table class="stack"><thead><tr><th>Candidate rule</th><th>Verdict</th></tr></thead><tbody>
+   <tr><td>Same object in memory (<code>==</code>)</td><td>Too strict: misses the duplicate</td></tr>
+   <tr><td>Same name</td><td>Too loose: two different Daisies</td></tr>
+   <tr><td>Same name + breed + age</td><td>Still can't tell two Daisies apart</td></tr>
+   <tr class="pick"><td>Same tag <code>id</code></td><td>Our rule</td></tr>
+  </tbody></table></div>
+  <h3>The rule of thumb</h3>
+  <ul class="clean">
+   <li><b>Primitives</b> (<code>int</code>, <code>char</code>, <code>boolean</code>): compare with <code>==</code>. For <code>double</code>, allow rounding: <code>Math.abs(a - b) &lt; 1e-9</code>.</li>
+   <li><b>Objects, including String</b>: compare with <code>.equals()</code>. <code>==</code> only asks "same arrow target?"</li>
+  </ul>
+  <p class="src">Slides 65–71. Fine print: the slide version is <code>equals(Dog that)</code>, which works when both sides are Dogs. The fully general version, which truly overrides Object's, takes <code>(Object o)</code>; you will see it later.</p>
+ </div>
+ <div class="toy panel">
+  <p class="ptitle">Toy: tap an expression, see the arrows</p>
+  <p style="font-size:15px">Predict first: is <code>daisy == daisy2</code> true or false? Commit to an answer, then tap.</p>
+  <pre class="java" id="eqCode" style="margin-bottom:12px"></pre>
+  <div class="mem" id="eqMem">
+   <svg class="wires" id="eqWires"></svg>
+   <div class="colh">Variables</div><div class="colh">Objects in memory</div>
+   <div class="vars" id="eqVars"></div><div class="objs" id="eqObjs"></div>
+  </div>
+  <div class="row" id="eqBtns" style="margin-top:14px"></div>
+  <div class="note" id="eqSay"><p>Tap an expression.</p></div>
+ </div>
+</div></section>
+
+<!-- 11 STATIC -->
+<section class="band" id="static"><div class="wrap two">
+ <div class="txt">
+  <h2><code style="font-size:.8em">static</code>: one copy for the whole class</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Thursday, 3:00 p.m.</b> Bea asks a simple question: "How many dogs are at camp right now?" Whose job is it to know? Not Daisy's. Not Max's.</p></div>
+  <p>Normal fields belong to <b>each dog</b>: every dog has its own name. A <code>static</code> field belongs to the <b>class itself</b>: there is one shared copy, and it exists even when there are zero dogs.</p>
+  <p>Perfect for "how many dogs are at camp?" Nobody's personal tag should hold that number. You've used static members before: <code>Math.PI</code>, <code>Math.sqrt(2.0)</code>. You call them on the class name, not on an object.</p>
+  <div class="tw"><table class="stack"><thead><tr><th></th><th>Instance method</th><th>Static method</th></tr></thead><tbody>
+   <tr><td>Belongs to</td><td>each object</td><td>the class itself</td></tr>
+   <tr><td>Header</td><td><code>public int getAge()</code></td><td><code>public static int getDogCount()</code></td></tr>
+   <tr><td>How you call it</td><td><code>daisy.getAge()</code></td><td><code>Dog.getDogCount()</code></td></tr>
+   <tr><td>Can use fields / <code>this</code>?</td><td>Yes, it knows which dog</td><td>No, there is no <code>this</code></td></tr>
+   <tr><td>Typical use</td><td>what one dog does</td><td>counters, utilities, <code>main()</code></td></tr>
+  </tbody></table></div>
+  <div class="note"><p><b>Rule of thumb:</b> if the method needs to know <i>which</i> dog, it is an instance method. If any dog, or no dog, will do, it can be static. Think: the shop's opening hours (static) vs. the contents of your basket (instance).</p></div>
+  <p class="src">Slides 72–75.</p>
+ </div>
+ <div class="toy panel">
+  <p class="ptitle">Toy: the shared counter</p>
+  <div style="display:grid;grid-template-columns:minmax(0,170px) minmax(0,1fr);gap:14px;align-items:start">
+   <div class="blueprint" style="background:var(--bpdeep);color:#fff;border-color:var(--bpdeep);font-size:13px">
+    <div class="bt" style="font-size:18px">Dog class</div>
+    <div class="sec">static: one shared copy</div>
+    <div class="fr" style="display:flex;justify-content:space-between"><span>dogCount</span><b id="stCount" style="font-size:22px;color:#ffc93c">0</b></div>
+    <div class="fr" style="display:flex;justify-content:space-between"><span>MAX_DOGS</span><b>100</b></div>
+   </div>
+   <div class="kennel" id="stKennel" style="grid-template-columns:repeat(auto-fill,minmax(110px,1fr))"></div>
+  </div>
+  <div class="row" style="margin-top:12px">
+   <button class="btn code" id="stAdd">new Dog(…)</button>
+   <button class="btn code" id="stGet">Dog.getDogCount()</button>
+   <button class="btn code warn" id="stBad">static method uses name</button>
+   <button class="btn ghost" id="stReset">Reset</button>
+  </div>
+  <div class="console" id="stOut" style="margin-top:12px"></div>
+ </div>
+</div></section>
+
+<!-- PILLARS -->
+<section class="band alt" id="pillars"><div class="wrap">
+ <h2>The four pillars of OOP</h2>
+ <p>It's Thursday evening, and everything so far builds toward four big ideas. Part 1 covers three of them (watch them get ticked off below); polymorphism, the fourth, arrives at the end of Part 2.</p>
+ <div class="pillars">
+  <div class="pill"><svg viewBox="0 0 54 54"><rect x="4" y="14" width="46" height="28" rx="14" fill="var(--bp)"/><rect x="27" y="14" width="23" height="28" rx="0" fill="var(--bad)"/><rect x="4" y="14" width="46" height="28" rx="14" fill="none" stroke="var(--ink)" stroke-width="2.5"/></svg><b>Encapsulation</b><span>Bundle data + methods in one unit. Keep the fields private.</span><br><span class="when done">✓ Encapsulation section</span></div>
+  <div class="pill"><svg viewBox="0 0 54 54"><rect x="8" y="10" width="38" height="34" rx="6" fill="var(--tag)"/><circle cx="20" cy="24" r="4" fill="var(--bp)"/><circle cx="34" cy="24" r="4" fill="var(--bp)"/><rect x="16" y="33" width="22" height="5" rx="2.5" fill="var(--bp)"/></svg><b>Abstraction</b><span>Use a class through its buttons (API), not its insides.</span><br><span class="when done">✓ API section</span></div>
+  <div class="pill"><svg viewBox="0 0 54 54"><circle cx="27" cy="10" r="7" fill="#7c4dcc"/><circle cx="12" cy="42" r="7" fill="var(--bp)"/><circle cx="42" cy="42" r="7" fill="var(--bp)"/><path d="M24 16L14 35M30 16l10 19" stroke="var(--ink)" stroke-width="2.5"/></svg><b>Inheritance</b><span><code>Dog extends Pet</code>: reuse what's shared, add what's new.</span><br><span class="when done">✓ Inheritance section</span></div>
+  <div class="pill"><svg viewBox="0 0 54 54"><rect x="4" y="20" width="14" height="14" rx="3" fill="var(--bp)"/><path d="M18 27h8" stroke="var(--ink)" stroke-width="2.5"/><circle cx="38" cy="12" r="7" fill="var(--tag)"/><circle cx="38" cy="27" r="7" fill="var(--bad)"/><circle cx="38" cy="42" r="7" fill="#7c4dcc"/><path d="M26 27L31 12M26 27h5M26 27l5 15" stroke="var(--ink)" stroke-width="2"/></svg><b>Polymorphism</b><span>One call, many types: each object answers its own way.</span><br><a class="when" href="#poly">Part 2, at the end</a></div>
+ </div>
+ <p class="src" style="margin-top:12px">Slide 76. Part 2 adds a fourth, polymorphism.</p>
+</div></section>
+
+<!-- 12 ENCAP -->
+<section class="band" id="encap"><div class="wrap two flip">
+ <div class="txt">
+  <h2>Encapsulation: lock the data, open the methods</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Friday, 9:00 a.m.</b> Alarm at the vet's office: Daisy's file says she is <b>−500</b> years old. An intern typed <code>daisy.age = -500;</code> and nothing stopped him.</p></div>
+  <p>Think of a capsule: the dog's data on one side, its methods on the other, sealed into one unit (the class). Then we lock the data with <code>private</code>. Outside code can only reach it through public methods, which <b>check</b> every change.</p>
+  <div class="capsule" style="margin:14px 0">
+   <div class="cf"><h4><svg class="lock" viewBox="0 0 14 14"><rect x="2" y="6" width="10" height="8" rx="2" fill="currentColor"/><path d="M4 6V4.5a3 3 0 0 1 6 0V6" stroke="currentColor" stroke-width="1.8" fill="none"/></svg> Fields: private</h4><ul><li>name</li><li>breed</li><li>age</li></ul></div>
+   <div class="cm"><h4>Methods: public</h4><ul><li>getAge()</li><li>setAge(int)</li><li>bark()</li></ul></div>
+  </div>
+  <h3>Why bother? Two problems with public fields</h3>
+  <ul class="clean">
+   <li><b>They accept nonsense.</b> <code>daisy.age = -500;</code> compiles. Nothing stops it.</li>
+   <li><b>They lock in your design.</b> Decide later to store <code>birthYear</code> instead of <code>age</code>? Every file that wrote <code>daisy.age</code> breaks. With a getter, only <code>Dog.java</code> changes.</li>
+  </ul>
+  <h3>Getters and setters</h3>
+  <p><b>Getter</b> (accessor) <code>getAge()</code> returns a field. <b>Setter</b> (mutator) <code>setAge(int)</code> changes it after checking. Not every field needs a setter: a dog's <code>breed</code> never changes, so it stays read-only.</p>
+  <p>Two more good habits: write a comment above each public method so users know how to use it, and make any helper methods <code>private</code> too.</p>
+  <div class="note"><p>You've seen this on the rover: <code>rover.setSpeed(...)</code> clamps every value to 0–100 before touching the motors. That's Lab 9's <code>clamp()</code> helper doing the checking.</p></div>
+  <p class="src">Slides 77–91. <code>private</code> is like a staff-only door: not secret, just not the way customers come in.</p>
+ </div>
+ <div class="toy panel">
+  <p class="ptitle">Toy: try to break Daisy's age</p>
+  <div class="seg" id="enSeg" role="group" aria-label="Field access"><button aria-pressed="true" data-v="pub">public int age;</button><button aria-pressed="false" data-v="priv">private int age;</button></div>
+  <pre class="java" id="enCode" style="margin:12px 0"></pre>
+  <div class="row" id="enBtns"></div>
+  <div style="display:grid;grid-template-columns:72px minmax(0,1fr);gap:12px;align-items:center;margin-top:12px">
+   <svg viewBox="0 0 100 100" style="width:72px;height:72px;--fur:#f2ece2;--ear:#ddd2bf"><use href="#dog"/></svg>
+   <div class="obj" id="enObj" style="animation:none"></div>
+  </div>
+  <div class="console" id="enOut" style="margin-top:12px"></div>
+ </div>
+</div></section>
+
+<!-- 13 API -->
+<section class="band alt" id="api"><div class="wrap two">
+ <div class="txt">
+  <h2>API: the contract between client and implementation</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Friday, noon.</b> An intern wants to build an owners' phone app on top of your Dog class. Meanwhile Bea wants to store birth years instead of ages. Can both happen without breaking each other? Then a coin flip decides who walks the dogs.</p></div>
+  <p>An <b>API</b> (Application Programming Interface) is the list of constructors and public methods, plus a short note on what each does. It is the menu of buttons. The <b>client</b> presses the buttons. The <b>implementation</b> is the hidden machinery.</p>
+  <div class="rest" style="margin:14px 0">
+   <div style="border-color:var(--bp)"><svg viewBox="0 0 120 92"><circle cx="40" cy="26" r="12" fill="var(--bp)"/><path d="M22 70q0-30 18-30t18 30z" fill="var(--bp)"/><rect x="62" y="52" width="50" height="6" rx="3" fill="var(--mut)"/><path d="M70 58v24M104 58v24" stroke="var(--mut)" stroke-width="4"/></svg><b>Client</b><span>the guest: orders from the menu</span></div>
+   <div style="border-color:var(--tag)"><svg viewBox="0 0 120 92"><rect x="30" y="8" width="60" height="78" rx="6" fill="var(--tagsoft)" stroke="var(--tag)" stroke-width="3"/><path d="M42 26h36M42 40h30M42 54h36M42 68h24" stroke="var(--tagink)" stroke-width="3" opacity=".7"/></svg><b>API</b><span>the menu: what you can order</span></div>
+   <div style="border-color:var(--bad)"><svg viewBox="0 0 120 92"><rect x="14" y="44" width="92" height="38" rx="6" fill="var(--mut)"/><rect x="24" y="30" width="26" height="14" rx="3" fill="var(--ink)"/><rect x="70" y="30" width="26" height="14" rx="3" fill="var(--ink)"/><path d="M37 26q-4-8 0-14M83 26q-4-8 0-14" stroke="var(--bad)" stroke-width="3" fill="none"/></svg><b>Implementation</b><span>the kitchen: staff only</span></div>
+  </div>
+  <div class="tw"><table class="stack"><thead><tr><th>Role</th><th>Dog camp</th><th>Rover lab</th></tr></thead><tbody>
+   <tr><td><b>Application</b></td><td>check-in program used by camp staff</td><td>your program running on the rover</td></tr>
+   <tr><td><b>Client</b></td><td><code>DogCamp.java</code>: <code>daisy.setAge(4)</code></td><td>your <code>Lab.java</code>: <code>rover.setSpeed(50,50,50,50)</code></td></tr>
+   <tr><td><b>API</b></td><td><code>Dog(…)</code>, <code>getName()</code>, <code>setAge(int)</code></td><td><code>setSpeed(…)</code>, <code>getDistanceCm()</code></td></tr>
+   <tr><td><b>Implementation</b></td><td><code>Dog.java</code></td><td><code>Rover.java</code>: motors, sensors</td></tr>
+  </tbody></table></div>
+  <h3>The Dog API: the whole contract on one card</h3>
+  <div class="tw"><table class="stack"><thead><tr><th>Constructor or method</th><th>What it does</th></tr></thead><tbody>
+   <tr><td><code>Dog(int id, String name, String breed, int age)</code></td><td>create a dog with camp tag id</td></tr>
+   <tr><td><code>int getId()</code></td><td>camp tag number</td></tr>
+   <tr><td><code>String getName()</code>, <code>String getBreed()</code>, <code>int getAge()</code></td><td>read name, breed, age</td></tr>
+   <tr><td><code>void setName(String name)</code></td><td>change the name</td></tr>
+   <tr><td><code>void setAge(int age)</code></td><td>change the age; rejected if not 0–30</td></tr>
+   <tr><td><code>String toString()</code></td><td>e.g. <code>[id=9, name=Daisy, …]</code></td></tr>
+   <tr><td><code>boolean equals(Dog that)</code></td><td>same camp tag?</td></tr>
+  </tbody></table></div>
+  <p style="margin-top:10px">Not on the card: private fields and method bodies. A client needs only this table, just as you used <code>Math.abs</code> and <code>rover.setSpeed</code> without seeing their insides.</p>
+  <p>The same idea runs the web. A phone app is the <b>frontend</b> (the dining room); the server is the <b>backend</b> (the kitchen); the web API is the menu, and each request is the waiter carrying an order. Every boundary has a client on one side and an implementation on the other.</p>
+  <p class="src">Slides 92–105.</p>
+ </div>
+ <div class="toy panel">
+  <p class="ptitle">Toy: swap the kitchen, keep the menu</p>
+  <p style="font-size:15px">Both implementations have the same API. Switch between them and run the client.</p>
+  <div class="seg" id="apiSeg" role="group" aria-label="Implementation"><button aria-pressed="true" data-v="a">A: stores age</button><button aria-pressed="false" data-v="b">B: stores birthYear</button></div>
+  <div class="src" style="margin:12px 0 4px">Dog.java (implementation, hidden)</div>
+  <pre class="java" id="apiImpl"></pre>
+  <div class="src" style="margin:12px 0 4px">DogCamp.java (client, never changes)</div>
+  <pre class="java" id="apiClient"></pre>
+  <div class="row" style="margin-top:10px"><button class="btn solid" id="apiRun">Run client</button></div>
+  <div class="console" id="apiOut" style="margin-top:10px"></div>
+  <p class="ptitle" style="margin-top:24px">Toy 2: who walks first? A coin-flip Counter</p>
+  <p style="font-size:15px">A textbook API (COS 226): a <code>Counter</code> you can only increment and read. The client never touches <code>count</code> directly.</p>
+  <pre class="java" id="ctrApi"></pre>
+  <div class="tally"><div><b id="ctrH">0</b><span>heads.tally()</span></div><div><b id="ctrT">0</b><span>tails.tally()</span></div></div>
+  <div class="row"><button class="btn code" id="ctr1">flip once</button><button class="btn code" id="ctr20">flip 20 times</button><button class="btn ghost" id="ctrR">Reset</button></div>
+  <div class="console" id="ctrOut" style="margin-top:10px"></div>
+ </div>
+</div></section>
+
+<!-- 14 INHERIT -->
+<section class="band" id="inherit"><div class="wrap two flip">
+ <div class="txt">
+  <h2>Inheritance: write shared code once</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Friday, 3:00 p.m.</b> Bea bursts in: "Big news! Starting Monday we take cats too." You picture copying all of Dog.java into Cat.java, and shudder.</p></div>
+  <p>The camp now takes cats too. Dogs and cats share a lot: <code>id</code>, <code>name</code>, <code>age</code>, <code>getName()</code>, <code>checkIn()</code>. Copying that code into both classes means fixing every bug twice.</p>
+  <p>Instead, put the shared parts in a <b>superclass</b> (parent) called <code>Pet</code>. Then <code>Dog</code> and <code>Cat</code> <b>extend</b> it and add only what is new.</p>
+  <pre class="java" id="inCode"></pre>
+  <ul class="clean" style="margin-top:12px">
+   <li><code>extends Pet</code>: Dog gets Pet's fields and methods.</li>
+   <li><code>super(id, name, age)</code>: run Pet's constructor to set up the inherited part. Forget it and you get <i>"constructor Pet in class Pet cannot be applied to given types"</i>.</li>
+   <li>Pet's <code>private</code> fields are inside every Dog, but Dog's code must use getters to reach them.</li>
+  </ul>
+  <div class="note"><p><b>The "is-a" test:</b> use <code>extends</code> only when "a Dog <i>is a</i> Pet" is true. A Dog <i>has a</i> name, so name is a field, not a parent class.</p></div>
+  <p class="src">Slides 106–114. Every class secretly extends <code>Object</code>; that's where the default <code>toString()</code> and <code>equals()</code> come from.</p>
+ </div>
+ <div class="toy panel">
+  <p class="ptitle">Toy: before and after</p>
+  <div class="seg" id="inSeg" role="group" aria-label="Before or after"><button aria-pressed="false" data-v="before">Before: copied code</button><button aria-pressed="true" data-v="after">After: Pet superclass</button></div>
+  <div class="tree" id="inTree" style="margin-top:12px"></div>
+  <p class="ptitle" style="margin-top:16px">What can <code>daisy</code> do, and where does it come from?</p>
+  <div class="from" id="inFrom"></div>
+  <p class="ptitle" style="margin-top:16px">Is-a check</p>
+  <div class="tf" id="isa"></div>
+ </div>
+</div></section>
+
+<!-- 15 OVERRIDE -->
+<section class="band alt" id="override"><div class="wrap two">
+ <div class="txt">
+  <h2>Overriding: same method, the child's own version</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Friday, 4:30 p.m.</b> First test run with cats: Tom the cat "makes a sound". So does Daisy. Bea: "Dogs bark. Cats meow. Fix it."</p></div>
+  <p>Pet has <code>speak()</code> that prints "makes a sound". That's fine as a fallback, but a dog should say Woof and a cat should say Meow. A subclass can <b>override</b> an inherited method: same name, same parameters, new body.</p>
+  <p>Put <code>@Override</code> above it. It asks the compiler to check that you really are replacing a parent method. A typo like <code>speek()</code> then becomes a compile error instead of a silent bug.</p>
+  <div class="note"><p>Look at the loop on the right: one line, <code>pets[i].speak()</code>, and each pet answers in its own way. That idea is called <b>polymorphism</b>, the fourth pillar, coming in OOP part 2.</p></div>
+  <h3>Access levels (optional)</h3>
+  <div class="tw"><table><thead><tr><th>Modifier</th><th>Same class</th><th>Same package</th><th>Subclass</th><th>Anywhere</th></tr></thead><tbody>
+   <tr><td><code>public</code></td><td class="y">yes</td><td class="y">yes</td><td class="y">yes</td><td class="y">yes</td></tr>
+   <tr><td><code>protected</code></td><td class="y">yes</td><td class="y">yes</td><td class="y">yes</td><td class="x">no</td></tr>
+   <tr><td>(no keyword)</td><td class="y">yes</td><td class="y">yes</td><td class="x">no*</td><td class="x">no</td></tr>
+   <tr><td><code>private</code></td><td class="y">yes</td><td class="x">no</td><td class="x">no</td><td class="x">no</td></tr>
+  </tbody></table></div>
+  <p class="src" style="margin-top:8px">*Subclass in a different package. Slides 115–118.</p>
+ </div>
+ <div class="toy panel">
+  <p class="ptitle">Toy: turn overriding on and off</p>
+  <div class="seg" id="ovSeg" role="group" aria-label="Override"><button aria-pressed="false" data-v="0">inherit as-is</button><button aria-pressed="true" data-v="1">override speak()</button><button aria-pressed="false" data-v="t">typo: speek()</button></div>
+  <div class="speech">
+   <div class="pal"><svg viewBox="0 0 100 100" style="--fur:#f2ece2;--ear:#ddd2bf"><use href="#dog"/></svg><div class="bubble" id="ovDog"></div><div class="src">Daisy (Dog)</div></div>
+   <div class="pal"><svg viewBox="0 0 100 100"><use href="#cat"/></svg><div class="bubble" id="ovCat"></div><div class="src">Tom (Cat)</div></div>
+  </div>
+  <pre class="java" id="ovCode"></pre>
+  <div class="console" id="ovOut" style="margin-top:12px"></div>
+ </div>
+</div></section>
+
+<!-- 16 QUIZ -->
+<section class="band" id="quiz"><div class="wrap">
+ <h2>Part 1 wrap-up: connect it to real life</h2>
+ <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Friday, 6:00 p.m.</b> Week one is done. The camp runs on your code, and Bea has stopped using paper forms. Before the weekend, see how much stuck.</p></div>
+ <div class="cheat">
+  <div><b>Class and object</b><span>A blueprint and a house. One blueprint, a hundred houses.</span></div>
+  <div><b>Fields</b><span>What the object knows. Your passport holds your name, not mine.</span></div>
+  <div><b>Methods</b><span>What it can do. A washing machine's spin cycle, described once in the manual.</span></div>
+  <div><b>Constructor</b><span>The form you fill in to open a bank account. Once, and nothing works until it's done.</span></div>
+  <div><b>private</b><span>The staff-only door. Not secret, just not the customer entrance.</span></div>
+  <div><b>Getters</b><span>Asking the bank for your balance instead of being handed the ledger.</span></div>
+  <div><b>Encapsulation</b><span>A car's dashboard: every control you need, none of the wiring.</span></div>
+  <div><b>UML</b><span>A floor plan everyone on the site reads the same way.</span></div>
+  <div><b>static vs instance</b><span>The shop's opening hours vs. the contents of your own basket.</span></div>
+ </div>
+ <h2 style="margin-top:44px">Check yourself: Part 1</h2>
+ <p>Answer before you peek. Each answer explains itself. <span class="score" id="qScore"></span></p>
+ <div class="quiz" id="quizBox"></div>
+ <div class="row" style="margin-top:14px"><button class="btn ghost" id="qReset">Clear answers</button></div>
+ <div class="note" style="margin-top:20px"><p><b>Want a harder test?</b> Jump to the <a href="#rush">Front Desk Rush arcade</a> and pick the Part 1 deck: ten snippets, 12 seconds each, three lives.</p></div>
+</div></section>
+
+<!-- ================= PART 2 ================= -->
+<section class="band hero" id="part2"><div class="wrap">
+ <h2 style="font-size:clamp(32px,4.4vw,50px)">Part 2: the camp grows</h2>
+ <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Season two.</b> Word got around, and Tiger Paws now has a waiting list. Bea is expanding: storage boxes for every kind of supply, a new kennel building, an agility show with a proper line-up, and a closing ceremony where every animal gets the microphone. Your software has to keep up.</p></div>
+ <p class="lede">Along the way: generics, wrapper classes, arrays of objects, searching and sorting, the <code style="background:transparent;color:#ffe9a8">Comparable</code> interface, and finally the fourth pillar, polymorphism.</p>
+</div></section>
+
+<!-- GENERICS -->
+<section class="band" id="generics"><div class="wrap two">
+ <div class="txt">
+  <h2>Generics: one box for any cargo</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Season two, week 1.</b> Bea orders storage boxes: one for treat counts, one for name tags, one for whole dog records. You start typing <code>IntBox</code>, <code>StringBox</code>, <code>DogBox</code>… and realise you are writing the same class again and again with one word changed.</p></div>
+  <p>Remember overloading? One method name works with many parameter types, so Java can have one <code>add</code>. C has no overloading, so it needs separate names: <code>abs</code>, <code>fabs</code>, <code>labs</code>…</p>
+  <p><b>Generics</b> bring that idea to whole classes. Write the class once with a <b>type parameter</b> <code>T</code>, a blank label that gets filled in when you use the class:</p>
+  <pre class="java" id="genCode"></pre>
+  <ul class="clean" style="margin-top:12px">
+   <li><b>Reuse:</b> one Box class for every type, so fixing one bug fixes them all.</li>
+   <li><b>Type safety:</b> a <code>Box&lt;String&gt;</code> only accepts Strings. Mistakes are caught when you compile, before the program runs, and you never need casts.</li>
+   <li>By convention a type parameter is one capital letter: <code>T</code> for type, <code>E</code> for element.</li>
+   <li>Two are fine too: <code>public class Pair&lt;S, T&gt;</code> holds two things of different types.</li>
+   <li>Inside the class, use <code>T</code> like a real type, with one exception: you can't write <code>new T()</code>.</li>
+  </ul>
+  <p class="src">Part 2 slides 2–7, 15. Picture a shipping container: standard fittings, any contents, and the crane doesn't care what's inside.</p>
+ </div>
+ <div class="toy panel">
+  <p class="ptitle">Toy: Bea needs another box</p>
+  <div class="cmp">
+   <div><div class="src" style="margin-bottom:6px">Without generics: one class per type</div><div class="crates" id="genWithout"></div></div>
+   <div><div class="src" style="margin-bottom:6px">With generics: one class, many labels</div><div class="crates" id="genWith"></div></div>
+  </div>
+  <p id="genCount" style="font-weight:700;margin:8px 0"></p>
+  <div class="row"><button class="btn" id="genMore"></button><button class="btn ghost" id="genReset">Reset</button></div>
+  <p class="ptitle" style="margin-top:20px">Type-safety test: what fits in the box?</p>
+  <div class="seg" id="genT" role="group" aria-label="Type parameter"><button aria-pressed="true" data-v="Integer">Box&lt;Integer&gt;</button><button aria-pressed="false" data-v="String">Box&lt;String&gt;</button><button aria-pressed="false" data-v="Dog">Box&lt;Dog&gt;</button></div>
+  <div class="row" id="genPut" style="margin-top:10px"></div>
+  <div class="console" id="genOut" style="margin-top:10px"></div>
+ </div>
+</div></section>
+
+<!-- WRAPPERS -->
+<section class="band alt" id="wrappers"><div class="wrap two flip">
+ <div class="txt">
+  <h2>Wrapper classes: gift-wrapping a primitive</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Week 1, Tuesday.</b> You try <code>Box&lt;int&gt;</code> for the treat counts. javac refuses: <i>unexpected type; required: reference; found: int</i>. Generics only hold objects, and <code>int</code> is not an object.</p></div>
+  <p>A <b>primitive</b> is a bare value. A <b>wrapper</b> is the same value gift-wrapped inside an object. Every primitive type has one:</p>
+  <div class="wraps"><span>int → Integer</span><span>double → Double</span><span>char → Character</span><span>boolean → Boolean</span><span>long → Long</span><span>float → Float</span><span>byte → Byte</span><span>short → Short</span></div>
+  <div class="tw"><table class="stack"><thead><tr><th></th><th>Primitive <code>int</code></th><th>Wrapper <code>Integer</code></th></tr></thead><tbody>
+   <tr><td>Memory</td><td>4 bytes</td><td>about 16 bytes (object header + value)</td></tr>
+   <tr><td>Speed</td><td>fastest</td><td>a little slower</td></tr>
+   <tr><td>Fits in generics</td><td>no</td><td>yes: <code>Box&lt;Integer&gt;</code></td></tr>
+   <tr><td>Use it for</td><td>performance-critical code</td><td>when you need object features</td></tr>
+  </tbody></table></div>
+  <h3>You already know how to read this class</h3>
+  <p><code>Integer</code> is a normal class with the parts you know. <b>Fields:</b> <code>Integer.MAX_VALUE</code> is 2,147,483,647 (2<sup>31</sup> − 1) and <code>MIN_VALUE</code> is −2<sup>31</sup>, straight from the two's complement chapter. <b>Methods:</b> <code>Integer.parseInt("42")</code>, <code>Integer.compare(a, b)</code>. It even has constructors, but <code>new Integer(5)</code> is deprecated; write <code>Integer x = 5;</code> instead.</p>
+  <h3>Autoboxing and unboxing</h3>
+  <p>Java wraps and unwraps for you. <b>Autoboxing:</b> <code>Integer obj = num;</code> puts the int in a box. <b>Auto-unboxing:</b> <code>int p = obj;</code> takes it back out. No <code>new</code>, no <code>.intValue()</code> needed.</p>
+  <div class="note bad"><p><b>Gotcha:</b> wrappers are objects, so <code>==</code> compares arrows, just like Dogs. <code>Integer a = 1000, b = 1000;</code> then <code>a == b</code> is <code>false</code>. Use <code>a.equals(b)</code>. (Small values from −128 to 127 are cached, so <code>==</code> happens to work there, which makes this bug sneaky.)</p></div>
+  <p class="src">Part 2 slides 8–14.</p>
+ </div>
+ <div class="toy panel">
+  <p class="ptitle">Toy: wrap and unwrap</p>
+  <div class="wrapviz">
+   <div><div class="bare" id="wBare">5</div><div class="lab">int (bare value)</div></div>
+   <div class="arrows"><div id="wAuto">autoboxing →</div><div id="wUn">← unboxing</div></div>
+   <div><div class="gift empty" id="wGift"><span id="wGiftV">?</span></div><div class="lab">Integer (object)</div></div>
+  </div>
+  <div class="row" id="wBtns"></div>
+  <div class="console" id="wOut" style="margin-top:12px"></div>
+ </div>
+</div></section>
+
+<!-- ARRAY OF OBJECTS -->
+<section class="band" id="dogarray"><div class="wrap two">
+ <div class="txt">
+  <h2>Arrays of objects: a kennel for many dogs</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Week 2.</b> The new kennel building has five kennels. You write <code>Dog[] kennel = new Dog[5];</code>, walk over to greet the dogs… and all five kennels are empty.</p></div>
+  <p>An array of objects is an <b>array of arrows</b>. <code>new Dog[5]</code> builds five slots, and each starts as <code>null</code>, meaning "no dog here yet". That line creates <b>zero</b> Dog objects. Every dog still needs its own <code>new</code>.</p>
+  <ul class="clean">
+   <li><code>kennel[0] = new Dog("Daisy", 3);</code> builds a dog and stores its arrow in slot 0.</li>
+   <li><code>Dog[] dogArray = {daisy, balto};</code> makes an array that copies the arrows of dogs you already have.</li>
+   <li><code>for (Dog d : kennel)</code> visits every slot, empty ones included.</li>
+  </ul>
+  <div class="note bad"><p>Calling a method through an empty slot crashes the program with a <code>NullPointerException</code>: there is no dog to bark. Check <code>if (kennel[i] != null)</code> first.</p></div>
+  <p class="src">Part 2 slides 16–18.</p>
+ </div>
+ <div class="toy panel">
+  <pre class="java" id="kaCode" style="margin-bottom:12px"></pre>
+  <div class="stepper"><button class="btn ghost" id="kaBack">Back</button><button class="btn solid" id="kaNext">Next</button><button class="btn ghost" id="kaReset">Restart</button><span class="cnt" id="kaCnt"></span></div>
+  <div class="kviz" id="kaViz">
+   <div class="src" style="margin-bottom:4px">the array <code>kennel</code></div>
+   <div class="slots" id="kaSlots"></div><div class="sidx"><span>[0]</span><span>[1]</span><span>[2]</span><span>[3]</span><span>[4]</span></div>
+   <div class="pen" id="kaPen"></div>
+   <svg class="wires" id="kaWires"></svg>
+  </div>
+  <div class="console" id="kaOut" style="margin-top:12px"></div>
+  <div class="note" id="kaNote"></div>
+ </div>
+</div></section>
+
+<!-- SEARCH -->
+<section class="band alt" id="search"><div class="wrap two flip">
+ <div class="txt">
+  <h2>Why sort? To find things fast</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Week 3, Monday.</b> A parent calls: "Is tag 72 registered?" Bea's list holds 16 tag numbers. You could check them one by one… or be clever, because the list is <b>sorted</b>.</p></div>
+  <p><b>Linear search</b> checks items one by one from the left. It works on any array, sorted or not, but in the worst case it checks every item.</p>
+  <pre class="java" id="linCode"></pre>
+  <p style="margin-top:12px"><b>Binary search</b> is how you use a phone book. Looking for "Max"? Open the middle, see "L", ignore the left half. Each look throws away half of what's left. It only works because the list is sorted.</p>
+  <pre class="java" id="binCode"></pre>
+  <div class="tw" style="margin-top:12px"><table><thead><tr><th>Items n</th><th style="text-align:right">Linear: up to n</th><th style="text-align:right">Binary: about log₂ n</th></tr></thead><tbody>
+   <tr><td>16</td><td style="text-align:right">16</td><td style="text-align:right">5</td></tr>
+   <tr><td>1,000</td><td style="text-align:right">1,000</td><td style="text-align:right">10</td></tr>
+   <tr><td>1,000,000</td><td style="text-align:right">1,000,000</td><td style="text-align:right">20</td></tr>
+   <tr><td>1,000,000,000</td><td style="text-align:right">1,000,000,000</td><td style="text-align:right">30</td></tr>
+  </tbody></table></div>
+  <p style="margin-top:10px">Double the items: linear search does <b>double</b> the work, written O(n). Binary search does <b>one more</b> step, written O(log n). The catch: the data must be sorted first. Sort once, then search fast many times; databases keep sorted indexes for exactly this reason.</p>
+  <p class="src">Part 2 slides 19–27. Fine print: for giant arrays, <code>lo + (hi - lo) / 2</code> avoids the int overflow that <code>(lo + hi) / 2</code> can hit.</p>
+ </div>
+ <div class="toy panel">
+  <p class="ptitle">Toy: find the tag</p>
+  <div class="row" style="align-items:end">
+   <label>target<input id="sTarget" type="number" value="72" style="width:96px"></label>
+   <button class="btn ghost code" data-t="72">72</button><button class="btn ghost code" data-t="40">40</button><button class="btn ghost code" data-t="2">2</button><button class="btn ghost code" data-t="99">99</button>
+  </div>
+  <div class="shead"><span>Linear search</span><span id="sLinN">0 checks</span></div>
+  <div class="srow" id="sLin"></div>
+  <div class="shead"><span>Binary search</span><span id="sBinN">0 checks</span></div>
+  <div class="srow" id="sBin"></div><div class="slab" id="sBinLab"></div>
+  <div class="row" style="margin-top:12px"><button class="btn" id="sStepL">Step linear</button><button class="btn" id="sStepB">Step binary</button><button class="btn solid" id="sAll">Run both to the end</button><button class="btn ghost" id="sReset">Reset</button></div>
+  <div class="console" id="sOut" style="margin-top:12px"></div>
+ </div>
+</div></section>
+
+<!-- ANTS -->
+<section class="band" id="ants"><div class="wrap two">
+ <div class="txt">
+  <h2>Is log n a big deal? Ask the ants</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Week 3, Tuesday.</b> Bea shrugs: "20 steps or a million, computers are fast." So you set up a race between two ants.</p></div>
+  <p>Put the items in a line, <b>1 cm apart</b>. Both ants walk at <b>1 cm per second</b>.</p>
+  <ul class="clean">
+   <li>The <b>linear ant</b> walks the whole line: n cm, so n seconds.</li>
+   <li>The <b>binary ant</b> only climbs the height of the triangle: log₂ n cm, so log₂ n seconds.</li>
+  </ul>
+  <p>Why a triangle? Each step of binary search halves the range, so a search tree of height m covers 2<sup>m</sup> items. Width n, height log₂ n: same triangle, two very different walks.</p>
+  <p>Drag the slider all the way up. log₂ n grows so slowly it is almost constant in practice: searching every atom in the universe takes the binary ant 266 seconds. The price to pay is keeping the data sorted.</p>
+  <p class="src">Part 2 slides 28–38. Times are rounded, as on the slides.</p>
+ </div>
+ <div class="toy panel">
+  <p class="ptitle" id="antTitle">Toy: the ant race</p>
+  <input type="range" id="antN" min="0" max="8" value="1" aria-label="Number of items">
+  <div class="antfig" id="antFig"><svg id="antSvg" role="img" aria-label="Triangle: width n items, height log2 n"></svg></div>
+  <div class="race">
+   <div class="lin"><small>linear ant: walks the width</small><b id="antLin"></b></div>
+   <div class="bin"><small>binary ant: climbs the height</small><b id="antBin"></b></div>
+  </div>
+  <div class="row" style="margin-top:12px"><button class="btn solid" id="antGo">Race!</button></div>
+  <div class="note" id="antSay"></div>
+ </div>
+</div></section>
+
+<!-- GAME: GUESS -->
+<section class="band game" id="guess"><div class="wrap two">
+ <div class="txt">
+  <h2>Game: beat the binary ant</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Week 3, Wednesday.</b> The binary ant is getting cocky. Bea hides a tag number from 1 to 100. You get <b>7 guesses</b>, and she only ever says "higher" or "lower". The ant claims it never needs more than 7. Can you match it?</p></div>
+  <p>The yellow bar shows the numbers that are still possible. Every answer from Bea greys out part of it.</p>
+  <p>Why exactly 7? Each guess can cut the possibilities in half: 100 → 50 → 25 → 13 → 7 → 4 → 2 → 1. Since 2<sup>7</sup> = 128 ≥ 100, seven halvings are always enough. That's log₂ n in action.</p>
+  <div class="row"><button class="btn ghost" id="gHint">Show me the strategy</button></div>
+  <div class="note" id="gHintTxt" hidden><p>Always guess the <b>middle</b> of the yellow range. Start with 50; if Bea says higher, try 75; if lower, try 25… That is exactly <code>mid = (lo + hi) / 2</code>.</p></div>
+ </div>
+ <div class="toy panel">
+  <p class="ptitle">Find Bea's secret tag</p>
+  <div class="gdots" id="gDots" aria-label="Guesses left"></div>
+  <div class="gstrip" id="gStrip" aria-hidden="true"></div>
+  <div class="glabels"><span>1</span><span id="gRange"></span><span>100</span></div>
+  <form class="row" id="gForm" style="margin-top:12px;align-items:end" autocomplete="off">
+   <label>your guess<input id="gIn" type="number" min="1" max="100" style="width:110px" inputmode="numeric"></label>
+   <button class="btn solid" type="submit" id="gGo">Guess</button>
+   <button class="btn ghost" type="button" id="gNew">New secret</button>
+   <button class="btn" type="button" id="gAnt" disabled>Watch the binary ant</button>
+  </form>
+  <div class="gsay" id="gSay"></div>
+  <div class="console" id="gLog" style="margin-top:10px"></div>
+ </div>
+</div></section>
+<!-- SORTING / COMPARABLE -->
+<section class="band alt" id="sorting"><div class="wrap two flip">
+ <div class="txt">
+  <h2>Sorting objects: Java needs a rule</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Week 4, agility show.</b> Bea wants the dogs lined up youngest first. Sorting numbers worked last week, so you confidently type <code>Arrays.sort(dogs);</code>. The program crashes.</p></div>
+  <p>Sorting isn't only for searching. Sorted data lets you <b>see patterns</b> at a glance (the youngest and oldest dog sit at the two ends, duplicates sit side by side, similar items cluster), and <b>people expect order</b>: products by price, emails by date, rankings top to bottom.</p>
+  <p><code>Arrays.sort</code> (from <code>java.util.Arrays</code>) already sorts numbers and Strings, because Java knows what "smaller" means for them: 1 &lt; 2, and "Alice" before "Bob". For Dogs, smaller by what? Age? Name? Days at camp? Java can't guess, so it refuses.</p>
+  <h3>Interfaces: a formal promise</h3>
+  <p>An <b>interface</b> is a list of methods that any class implementing it must contain. An API is an informal promise; an interface makes it formal, and javac checks that the class keeps it. Any client can then rely on those methods being there.</p>
+  <p><code>java.lang.Comparable&lt;T&gt;</code> lists exactly one method: <code>int compareTo(T o)</code>. Promise it, and <code>Arrays.sort</code> will accept your Dogs:</p>
+  <pre class="java" id="cmpDecl"></pre>
+  <p class="src" style="margin-top:10px">Part 2 slides 39–51. An interface is like a socket shape: the wall doesn't care what you plug in, only that the plug fits.</p>
+ </div>
+ <div class="toy panel">
+  <p class="ptitle">Toy: what fits the Arrays.sort() socket?</p>
+  <div class="socket" id="sockBox"><b>Arrays.sort()</b><span class="src">accepts only Comparable plugs</span><br><i></i></div>
+  <div class="plugs" id="plugs">
+   <button class="plug" data-p="0">String<small>A to Z</small></button>
+   <button class="plug" data-p="1">Integer<small>small to big</small></button>
+   <button class="plug" data-p="2">Dog implements Comparable<small>our rule</small></button>
+   <button class="plug bad" data-p="3">plain Dog<small>no rule</small></button>
+  </div>
+  <div class="console" id="plugOut" style="margin-top:14px"></div>
+ </div>
+</div></section>
+
+<!-- COMPARETO -->
+<section class="band" id="compareto"><div class="wrap two">
+ <div class="txt">
+  <h2><code style="font-size:.8em">compareTo</code>: thumbs down, level, or up</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Still week 4.</b> Bea: "Youngest first. And when two dogs are the same age?" Time to write the rule, and to decide what happens in a tie.</p></div>
+  <p><code>this.compareTo(that)</code> returns an int, and only its <b>sign</b> matters, like a thumb:</p>
+  <div class="thumbs">
+   <div class="neg"><b>−</b><span>negative: <b>this</b> goes before that</span></div>
+   <div><b>0</b><span>zero: a tie, same rank</span></div>
+   <div class="pos"><b>+</b><span>positive: <b>this</b> goes after that</span></div>
+  </div>
+  <p>−100 and −1 mean exactly the same thing: "before". You asked which is bigger, not by how much.</p>
+  <h3>Pro tip: don't subtract</h3>
+  <p>Slides often write <code>return this.age - that.age;</code>. That's fine for dog ages, but with huge values the subtraction can overflow (two's complement again!) and flip the sign, and the sort is silently wrong. <code>Integer.compare(this.age, that.age)</code> is always safe. Try the overflow button in the toy.</p>
+  <h3>Ties</h3>
+  <p>Three dogs aged 3: who goes first? <code>Arrays.sort</code> on objects is <b>stable</b>: tied dogs keep their original order. To decide yourself, break the tie with a second rule (name, then tag id). Every option is predictable; it just answers "who goes first?" differently.</p>
+  <p class="src">Part 2 slides 50–55. For names, <code>this.name.compareTo(that.name)</code> uses String's own rule: dictionary order, with capitals before lowercase.</p>
+ </div>
+ <div class="toy panel">
+  <p class="ptitle">Toy: line up the agility show</p>
+  <div class="seg" id="ruleSeg" role="group" aria-label="Sort rule"><button aria-pressed="true" data-v="age">by age</button><button aria-pressed="false" data-v="name">by name</button><button aria-pressed="false" data-v="ageName">age, then name</button><button aria-pressed="false" data-v="ageId">age, then id</button></div>
+  <pre class="java" id="ruleCode" style="margin:12px 0"></pre>
+  <div class="src" style="margin-bottom:4px">Before: <code>Dog[] dogs</code></div>
+  <div class="lane" id="laneBefore"></div>
+  <div class="row" style="margin:10px 0"><button class="btn solid code" id="sortGo">Arrays.sort(dogs);</button></div>
+  <div class="src" style="margin-bottom:4px">After</div>
+  <div class="lane" id="laneAfter"></div>
+  <p class="ptitle" style="margin-top:18px">Compare two dogs with this rule</p>
+  <div class="row" style="align-items:end"><label>this<select id="cmpA"></select></label><label>that<select id="cmpB"></select></label></div>
+  <div class="console" id="cmpOut" style="margin-top:10px"></div>
+  <div class="row" style="margin-top:10px"><button class="btn code warn" id="ovfBtn">overflow demo</button></div>
+ </div>
+</div></section>
+
+<!-- GAME: BE ARRAYS.SORT -->
+<section class="band game" id="besort"><div class="wrap two">
+ <div class="txt">
+  <h2>Game: you are Arrays.sort</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Week 4, show rehearsal.</b> The laptop died, so there is no <code>Arrays.sort</code> today. <i>You</i> line the dogs up, using nothing but their <code>compareTo</code> rule.</p></div>
+  <p><b>How to play:</b> tap one dog, then another, to swap them. Between each pair of neighbours you see <code>upper.compareTo(lower)</code>:</p>
+  <ul class="clean">
+   <li><b style="color:var(--ok)">negative</b> or <b>0</b>: these two are fine.</li>
+   <li><b style="color:var(--bad)">positive</b>: out of order, the upper dog should come later.</li>
+  </ul>
+  <p>The line is sorted when no pill is positive. That is exactly what <code>Arrays.sort</code> checks for, millions of times faster.</p>
+  <p class="ptitle" id="bsRuleName" style="margin-top:16px"></p>
+  <pre class="java" id="bsCode"></pre>
+  <p class="src" style="margin-top:10px">Watch for the "most days first" rule: swapping <code>this</code> and <code>that</code> flips the order.</p>
+ </div>
+ <div class="toy panel">
+  <div class="row" style="justify-content:space-between"><p class="ptitle" style="margin:0">Line-up: <span id="bsGoal"></span></p><span class="cnt" id="bsSwaps" style="font-weight:800;color:var(--mut)"></span></div>
+  <div class="sl" id="bsLane"></div>
+  <div class="gsay" id="bsSay"></div>
+  <div class="row" style="margin-top:10px"><button class="btn solid" id="bsNew">New line-up and rule</button><button class="btn ghost" id="bsShuffle">Reshuffle</button></div>
+ </div>
+</div></section>
+<!-- POLYMORPHISM -->
+<section class="band alt" id="poly"><div class="wrap two flip">
+ <div class="txt">
+  <h2>Polymorphism: one call, many types</h2>
+  <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Closing ceremony.</b> Bea grabs the microphone: "Everyone, speak!" One instruction, and every animal answers in its own way. That's the fourth pillar.</p></div>
+  <p>You have already used it. Three lines, one method name:</p>
+  <pre class="java" id="polySort"></pre>
+  <p style="margin-top:12px"><code>Arrays.sort</code> was written years before your Dog class existed. All it knows is "everything here is Comparable". Each object answers <code>compareTo</code> with its own class's version: one line of code, the right behavior for every type.</p>
+  <p>Inheritance does the same thing. A Dog <i>is a</i> Pet, so a <code>Pet</code> variable can point at a Dog:</p>
+  <pre class="java" id="polyPet"></pre>
+  <div class="note" style="margin-top:12px"><p><b>Two types, two jobs.</b> The <b>variable's type</b> (Pet) decides what you are <i>allowed</i> to call. The <b>object's type</b> (Dog or Cat) decides <i>which version runs</i>. So <code>pet.speak()</code> barks or meows, but <code>pet.getBreed()</code> doesn't compile: not every Pet has a breed.</p></div>
+  <div class="ptick"><span>✓ Encapsulation</span><span>✓ Abstraction</span><span>✓ Inheritance</span><span class="new">✓ Polymorphism</span></div>
+  <p class="src">Part 2 slide 56. "Everyone sign here": the instruction is identical, and every person signs differently.</p>
+ </div>
+ <div class="toy panel">
+  <p class="ptitle">Toy: one variable, different animals</p>
+  <p style="font-size:15px">Predict first: after <code>pet = new Cat(…)</code>, what will <code>pet.speak()</code> print? Decide, then switch and tap.</p>
+  <div class="seg" id="polySeg" role="group" aria-label="Object type"><button aria-pressed="true" data-v="Dog">new Dog(…)</button><button aria-pressed="false" data-v="Cat">new Cat(…)</button><button aria-pressed="false" data-v="Pet">new Pet(…)</button></div>
+  <div class="liveline" id="polyLine" style="color:var(--bp);font-weight:600;margin:12px 0 4px"></div>
+  <svg class="critter" viewBox="0 0 100 100" id="polyPic"><use href="#dog"/></svg>
+  <div class="row" id="polyBtns" style="justify-content:center"></div>
+  <div class="console" id="polyOut" style="margin-top:12px"></div>
+ </div>
+</div></section>
+
+<!-- GAME: FRONT DESK RUSH -->
+<section class="band game" id="rush"><div class="wrap">
+ <h2>Arcade: Front Desk Rush</h2>
+ <div class="story" style="max-width:880px"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>Last day of the season.</b> The front desk is swamped, and interns keep shoving code snippets at you. For each one, call it fast: does it <b>run</b>, fail to <b>compile</b>, or <b>crash</b> while running? You have three bones. Lose them all and Bea takes over.</p></div>
+ <div class="cab" id="rushCab">
+  <div class="hud"><span class="bones" id="rBones" aria-label="Lives"></span><span>Score <b id="rScore">0</b></span><span>Streak <b id="rStreak">0</b></span><span>Card <b id="rNum">0</b>/10</span><span>Best <b id="rBest">0</b></span></div>
+  <div id="rStage"></div>
+ </div>
+</div></section>
+<!-- QUIZ 2 -->
+<section class="band" id="quiz2"><div class="wrap">
+ <h2>Part 2 wrap-up: connect it to real life</h2>
+ <div class="story"><svg viewBox="0 0 60 60" aria-hidden="true"><use href="#bea"/></svg><p><b>End of season.</b> The dogs are sorted, the cats are meowing, and Bea has framed your Dog class on her office wall. One last check before graduation.</p></div>
+ <div class="cheat">
+  <div><b>Inheritance</b><span>A family recipe with one variation: grandmother's sauce, plus chilli.</span></div>
+  <div><b>Overriding</b><span>The same job title in two departments, done differently. You call the role; you get their version.</span></div>
+  <div><b>Polymorphism</b><span>"Everyone sign here." Every person signs differently; the instruction is identical.</span></div>
+  <div><b>Interface</b><span>A driving licence: it certifies what you can do, and says nothing about which car you own.</span></div>
+  <div><b>Comparable</b><span>A queue with a rule. Somebody has to decide what "before" means.</span></div>
+  <div><b>compareTo's sign</b><span>A thumb up, down or level. You asked which is bigger, not by how much.</span></div>
+  <div><b>Generics</b><span>A shipping container: standard fittings, any contents.</span></div>
+  <div><b>Wrapper class</b><span>The same value, gift-wrapped so it can travel as an object.</span></div>
+  <div><b>COS 226 vocabulary</b><span>API, client, implementation: learning the local word for something you already cook every week.</span></div>
+ </div>
+ <h2 style="margin-top:44px">Check yourself: Part 2</h2>
+ <p>Answer before you peek. <span class="score" id="q2Score"></span></p>
+ <div class="quiz" id="quiz2Box"></div>
+ <div class="row" style="margin-top:14px"><button class="btn ghost" id="q2Reset">Clear answers</button></div>
+ <div class="note good" style="margin-top:24px"><p id="gradMsg"></p></div>
+</div></section>
+
+<footer><div class="wrap">ECE 115 · Object-Oriented Programming, Parts 1 and 2 · Interactive companion to the lecture slides. Toy outputs are simulated in the page to match what the Java code prints. Tiger Paws Day Camp, Bea and the dogs are made up for the story.</div></footer>
+
+<script>
+{
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const KW='public|private|protected|class|static|final|void|int|double|boolean|new|return|this|super|extends|if|else|for|true|false|null';
+const RE=new RegExp('(//.*$)|("(?:[^"\\\\]|\\\\.)*")|(@Override)|\\b('+KW+')\\b|\\b(String|Dog|Pet|Cat|Math|System|Color)\\b|\\b(\\d+(?:\\.\\d+)?)\\b','gm');
+function hl(src){return esc(src).replace(RE,(m,c,s,a,k,t,n)=>c?'<span class="c">'+c+'</span>':s?'<span class="s">'+s+'</span>':a?'<span class="t">'+a+'</span>':k?'<span class="k">'+k+'</span>':t?'<span class="t">'+t+'</span>':'<span class="n">'+n+'</span>')}
+function code(el,lines){el.innerHTML=lines.map((l,i)=>{const [g,t]=Array.isArray(l)?l:['',l];return '<span class="ln" data-g="'+g+'" data-i="'+i+'">'+(hl(t)||' ')+'</span>'}).join('')}
+function mark(el,fn){el.querySelectorAll('.ln').forEach(n=>{const r=fn(n.dataset.g,+n.dataset.i);n.classList.toggle('hi',r==='hi');n.classList.toggle('dim',r==='dim');n.classList.toggle('err',r==='err')})}
+function seg(id,cb){const box=$(id);box.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;box.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));cb(b.dataset.v||b.dataset.w)})}
+function out(el,html,append){if(append){el.insertAdjacentHTML('beforeend',html);while(el.children.length>9)el.firstElementChild.remove()}else el.innerHTML=html;el.scrollTop=el.scrollHeight}
+const BREEDS={Poodle:['#f2ece2','#ddd2bf'],Beagle:['#c98a45','#6b3f1d'],Corgi:['#e08a3c','#b8652a'],Husky:['#9aa3ad','#5c6470'],Lab:['#e2b25f','#b9853a'],'Chow Chow':['#c9763a','#8a4b1f']};
+const dogSvg=(b,sz)=>{const c=BREEDS[b]||BREEDS.Lab;return '<svg viewBox="0 0 100 100" style="--fur:'+c[0]+';--ear:'+c[1]+';width:'+(sz||56)+'px;height:'+(sz||56)+'px"><use href="#dog"/></svg>'};
+const fillBreeds=(sel,v)=>{sel.innerHTML=Object.keys(BREEDS).map(b=>'<option'+(b===v?' selected':'')+'>'+b+'</option>').join('')};
+const varName=n=>{let s=(n||'dog').replace(/[^A-Za-z]/g,'');s=s?s[0].toLowerCase()+s.slice(1):'dog';return s};
+const q=s=>'"'+s+'"';
+
+/* wires: draw arrows from var boxes to object boxes */
+function wires(box,svg,pairs){const R=box.getBoundingClientRect();let h='';pairs.forEach(([a,b,col,w])=>{if(!a||!b)return;const r1=a.getBoundingClientRect(),r2=b.getBoundingClientRect();const x1=r1.right-R.left,y1=r1.top+r1.height/2-R.top,x2=r2.left-R.left-2,y2=r2.top+Math.min(26,r2.height/2)-R.top;const mx=(x1+x2)/2;const ww=w||2.5;h+='<path d="M'+x1+' '+y1+'C'+mx+' '+y1+' '+mx+' '+y2+' '+(x2-8)+' '+y2+'" fill="none" stroke="'+col+'" stroke-width="'+ww+'"/><path d="M'+(x2-10)+' '+(y2-6)+'L'+x2+' '+y2+'L'+(x2-10)+' '+(y2+6)+'Z" fill="'+col+'"/>'+'<circle cx="'+x1+'" cy="'+y1+'" r="4" fill="'+col+'"/>'});svg.innerHTML=h}
+
+/* ---------- HERO ---------- */
+try{
+ const k=$('#kennel');let dogs;
+ const init=()=>{dogs=[{n:'Rex',b:'Beagle',a:3,d:0},{n:'Luna',b:'Poodle',a:2,d:0},{n:'Milo',b:'Corgi',a:4,d:0}]};
+ const draw=(fresh)=>{k.innerHTML=dogs.map((d,i)=>'<div class="tagcard" style="'+(i===fresh?'':'animation:none')+'">'+dogSvg(d.b)+'<div class="nm">'+esc(d.n)+'</div><div class="fl">breed: '+esc(d.b)+'<br>age: '+d.a+'<br>daysAttended: <b>'+d.d+'</b></div><button class="mini" data-i="'+i+'">'+esc(varName(d.n))+'.checkIn()</button></div>').join('')};
+ fillBreeds($('#hBreed'),'Lab');init();draw();
+ const line=()=>{$('#hLine').textContent='Dog '+varName($('#hName').value)+' = new Dog('+q($('#hName').value||'Dog')+', '+q($('#hBreed').value)+', '+(+$('#hAge').value||0)+');'};
+ ['#hName','#hBreed','#hAge'].forEach(s=>$(s).addEventListener('input',line));line();
+ $('#hform').addEventListener('submit',e=>{e.preventDefault();const n=($('#hName').value||'Dog').trim().slice(0,12)||'Dog';let a=Math.max(0,Math.min(30,Math.round(+$('#hAge').value||0)));if(dogs.length>=8){$('#hNote').innerHTML='<p>Eight dogs is plenty for the demo. Press <b>Reset camp</b> to start again. (A real class has no such limit.)</p>';return}dogs.push({n,b:$('#hBreed').value,a,d:0});draw(dogs.length-1);$('#hNote').innerHTML='<p>A new object! Same blueprint, different data. There are now <b>'+dogs.length+'</b> separate Dog objects.</p>';const names=['Bella','Coco','Biscuit','Max','Daisy','Rocky','Pepper'];$('#hName').value=names[dogs.length%names.length];line()});
+ $('#hReset').addEventListener('click',()=>{init();draw();$('#hNote').innerHTML='<p>Back to three dogs.</p>'});
+ k.addEventListener('click',e=>{const b=e.target.closest('.mini');if(!b)return;const d=dogs[+b.dataset.i];d.d++;draw();$('#hNote').innerHTML='<p><code style="background:transparent;color:#ffe9a8">'+esc(varName(d.n))+'.checkIn()</code> changed only '+esc(d.n)+"'s daysAttended (now "+d.d+'). The other dogs did not move.</p>'});
+}catch(err){console.error(err)}
+
+/* ---------- MIXER ---------- */
+try{
+ const P={red:'#e53935',yellow:'#fdd835',blue:'#1e63d6',white:'#ffffff',green:'#2e9d4f'};
+ const MIX={'red+yellow':['orange','#fb8c00'],'blue+red':['purple','#7b3fb0'],'red+white':['pink','#f48fb1'],'blue+yellow':['green','#2e9d4f'],'green+red':['brown','#7a4a25'],'blue+white':['light blue','#8fb7f2'],'white+yellow':['cream','#fff1a6'],'green+yellow':['lime','#9ccc3d'],'blue+green':['teal','#1f8a8a'],'green+white':['mint','#a8e2bd']};
+ let A='red',B='yellow';
+ const chips=(id,cur,set)=>{const el=$(id);el.innerHTML=Object.keys(P).map(c=>'<button class="paint" aria-label="'+c+'" title="'+c+'" aria-pressed="'+(c===cur)+'" data-c="'+c+'" style="background:'+P[c]+'"></button>').join('');el.onclick=e=>{const b=e.target.closest('.paint');if(b){set(b.dataset.c);render()}}};
+ const render=()=>{chips('#mixA',A,v=>A=v);chips('#mixB',B,v=>B=v);let name,col;if(A===B){name=A;col=P[A]}else{const r=MIX[[A,B].sort().join('+')];name=r[0];col=r[1]}$('#mixBlob').style.background=col;$('#mixCode').innerHTML='<span class="cmd">Color mix = '+A+'.mix('+B+');</span>';$('#mixSay').textContent=A===B?'Mixing a color with itself gives the same '+name+'.':A+' mixed with '+B+' → '+name;};
+ render();
+}catch(err){console.error(err)}
+
+/* ---------- CAMP ---------- */
+try{
+ const base=[['Rex','Beagle','tan',11,3,12],['Luna','Poodle','gray',7,2,5],['Milo','Corgi','tan',12,4,30],['Bella','Lab','black',28,5,8],['Max','Beagle','brown',10,5,2],['Coco','Husky','gray',22,1,1]];
+ let D,flag;
+ const reset=()=>{D=base.map(r=>r.slice());flag={}};reset();
+ const rows=[['names',0],['breeds',1],['colors',2],['weights',3],['ages',4],['days',5]];
+ const draw=()=>{let h='<div class="r"><span class="h"></span>'+D.map((_,i)=>'<span class="h" style="text-align:center">['+i+']</span>').join('')+'</div>';rows.forEach(([lab,j])=>{h+='<div class="r"><span class="h">'+lab+'</span>'+D.map((d,i)=>{let c='cell';if(i===3)c+=' col';if(j===5&&flag.bad===i)c+=' bad';if(j===5&&flag.good===i)c+=' good';return '<span class="'+c+'">'+d[j]+'</span>'}).join('')+'</div>'});$('#arrView').innerHTML=h;$('#objView').innerHTML=D.map((d,i)=>'<div class="mc'+(flag.obj===i?' good':'')+'"><b>'+d[0].toLowerCase()+'</b>'+d[1]+'<br>age '+d[4]+'<br>days '+d[5]+'</div>').join('')};
+ draw();out($('#cOut'),'<div>Bella is dog #3. Her data is the yellow column.</div>');
+ $('#cGood').onclick=()=>{D[3][5]++;flag={good:3};draw();out($('#cOut'),'<div class="cmd">days[3]++;</div><div>Correct: Bella now has '+D[3][5]+' days. You had to remember she is #3.</div>')};
+ $('#cBad').onclick=()=>{D[1][5]++;flag={bad:1};draw();out($('#cOut'),'<div class="cmd">days[1]++;   // meant 3</div><div class="e">Luna got Bella\'s visit (now '+D[1][5]+'). Java gives no error: the index was valid, just wrong.</div>')};
+ $('#cObj').onclick=()=>{D[3][5]++;flag={obj:3};draw();out($('#cOut'),'<div class="cmd">bella.checkIn();</div><div>Bella now has '+D[3][5]+' days. No index to remember, nothing else can change.</div>')};
+ $('#cReset').onclick=()=>{reset();draw();out($('#cOut'),'<div>Reset. Bella is dog #3.</div>')};
+}catch(err){console.error(err)}
+
+/* ---------- SORT ---------- */
+try{
+ const W=[['name','f'],['bark()','m'],['age','f'],['eat()','m'],['breed','f'],['checkIn()','m'],['weight','f'],['run()','m'],['daysAttended','f'],['sleep()','m']];
+ let sel=null,placed;
+ const draw=()=>{$('#pool').innerHTML=W.filter(w=>!placed.has(w[0])).map(w=>'<button class="chip'+(sel===w[0]?' sel':'')+'" data-w="'+w[0]+'">'+w[0]+'</button>').join('')||'<span style="font-weight:700;color:var(--ok)">All sorted. Nice work!</span>';['f','m'].forEach(t=>{const bin=t==='f'?$('#binF'):$('#binM');bin.querySelector('div').innerHTML=W.filter(w=>placed.has(w[0])&&w[1]===t).map(w=>'<span class="chip '+t+'">'+w[0]+'</span>').join('');bin.classList.toggle('ready',!!sel)})};
+ const reset=()=>{placed=new Set();sel=null;$('#sortMsg').textContent='';draw()};reset();
+ $('#pool').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;sel=b.dataset.w;draw();$('#sortMsg').textContent='Now tap Fields or Methods for "'+sel+'".'};
+ const drop=t=>{if(!sel)return;const w=W.find(x=>x[0]===sel);if(w[1]===t){placed.add(sel);$('#sortMsg').textContent=t==='f'?'Yes: a dog has a '+sel+'.':'Yes: a dog can '+sel.replace('()','')+'.';sel=null}else{const bin=t==='f'?$('#binF'):$('#binM');bin.classList.remove('shake');void bin.offsetWidth;bin.classList.add('shake');$('#sortMsg').textContent=w[1]==='f'?'Not quite. "'+sel+'" is something a dog has, not something it does.':'Not quite. "'+sel+'" is an action: note the ().'}draw()};
+ [['#binF','f'],['#binM','m']].forEach(([id,t])=>{$(id).onclick=()=>drop(t);$(id).onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();drop(t)}}});
+ $('#sortReset').onclick=reset;
+}catch(err){console.error(err)}
+
+/* ---------- JAVA CLASS ---------- */
+try{
+ const L=[['h','public class Dog {'],['f','    public String name;'],['f','    public String breed;'],['f','    public int age;'],['f','    public int daysAttended;'],['',''],['m','    public void bark() {'],['m','        System.out.println(name + " says: Woof!");'],['m','    }'],['',''],['m','    public void eat() {'],['m','        System.out.println(name + " is eating.");'],['m','    }'],['',''],['m','    public void checkIn() {'],['m','        daysAttended++;'],['m','    }'],['h','}']];
+ const el=$('#javaCode');code(el,L);
+ $('#javaLegend').onclick=e=>{const b=e.target.closest('button');if(!b)return;const g=b.dataset.g;$('#javaLegend').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b&&g!==''));mark(el,x=>!g?'':x===g?'hi':'dim')};
+ const A=[['public','var(--bp)','<b>Access modifier.</b> Who may call this method. <code>public</code> = any code; <code>private</code> = only code inside Dog.'],['void','#c2410c','<b>Return type.</b> What the method hands back. <code>void</code> means nothing; <code>int</code> would mean a whole number comes back.'],['bark','#7c3aed','<b>Method name.</b> A verb in lowerCamelCase: <code>bark</code>, <code>checkIn</code>, <code>getAge</code>.'],['( )','#0f7d53','<b>Parameter list.</b> Extra info the method needs, separated by commas, e.g. <code>(int newAge)</code>. Empty if none.'],['{ … }','var(--mut)','<b>Body.</b> The steps that run each time the method is called.']];
+ const an=$('#anat');an.innerHTML=A.map((a,i)=>'<button data-i="'+i+'" aria-pressed="false" style="border-color:'+a[1]+';color:'+a[1]+'">'+a[0]+'</button>').join('');
+ an.onclick=e=>{const b=e.target.closest('button');if(!b)return;an.querySelectorAll('button').forEach((x,i)=>{const on=x===b;x.setAttribute('aria-pressed',on);x.style.background=on?A[i][1]:''});$('#anatSay').innerHTML='<p>'+A[+b.dataset.i][2]+'</p><p class="src" style="margin:6px 0 0">Object methods leave out <code>static</code>. You\'ll see why in the static section.</p>'};
+}catch(err){console.error(err)}
+
+/* ---------- MEMORY STEPPER ---------- */
+try{
+ const L=['Dog daisy;','daisy = new Dog();','daisy.name = "Daisy";','daisy.breed = "Poodle";','daisy.age = 3;','daisy.bark();','daisy.checkIn();','Dog max = new Dog();','max.name = "Max";','Dog alias = daisy;','alias.checkIn();'];
+ const el=$('#memCode');code(el,L);
+ const blank=()=>({name:'null',breed:'null',age:'0',daysAttended:'0'});
+ const S=[];let st={vars:[],objs:{},out:[]};
+ const clone=o=>JSON.parse(JSON.stringify(o));
+ const notes=['Press <b>Next</b> to run the first line.','<code>Dog daisy;</code> makes a variable that <i>can</i> point to a Dog. It is an empty name tag: no dog exists yet.','<code>new Dog()</code> asks Java for memory, builds a Dog there, and returns its <b>address</b>. daisy stores 5432, the address, not the dog. Fields start at defaults (null and 0).','The dot means "daisy\'s". Java follows the arrow and writes into that object\'s <code>name</code>.','Same object, next field.','Same object, next field.','Calling a method: Java follows the arrow and runs <code>bark()</code> using <i>this</i> dog\'s name.','<code>checkIn()</code> adds 1 to this dog\'s <code>daysAttended</code>.','A second <code>new</code> builds a second, completely separate object at a new address.','Changing max does not touch daisy. Each object has its own fields.','No <code>new</code> here! <code>alias</code> copies daisy\'s <b>address</b>. Two name tags, one dog.','We changed the dog through <code>alias</code>… and daisy sees it too (daysAttended is now 2), because it is the same object.'];
+ const apply=i=>{const s=st;if(i===0)s.vars.push({n:'daisy',r:null});if(i===1){s.objs['5432']=blank();s.vars[0].r='5432'}if(i===2)s.objs['5432'].name='"Daisy"';if(i===3)s.objs['5432'].breed='"Poodle"';if(i===4)s.objs['5432'].age='3';if(i===5)s.out.push('Daisy says: Woof!');if(i===6)s.objs['5432'].daysAttended='1';if(i===7){s.objs['7710']=blank();s.vars.push({n:'max',r:'7710'})}if(i===8)s.objs['7710'].name='"Max"';if(i===9)s.vars.push({n:'alias',r:'5432'});if(i===10)s.objs['5432'].daysAttended='2'};
+ S.push(clone(st));L.forEach((_,i)=>{apply(i);S.push(clone(st))});
+ const changed=[null,null,null,['5432','name'],['5432','breed'],['5432','age'],null,['5432','daysAttended'],null,['7710','name'],null,['5432','daysAttended']];
+ let k=0;
+ const render=()=>{const s=S[k];mark(el,(g,i)=>i===k-1?'hi':i>=k?'dim':'');$('#memCnt').textContent='Line '+k+' of '+L.length;
+  const usedVar=k>0?(L[k-1].match(/^(?:Dog )?(\w+)/)||[])[1]:'';
+  $('#memVars').innerHTML=s.vars.map(v=>'<div class="var'+(v.n===usedVar?' hl':'')+'" data-r="'+(v.r||'')+'"><div class="vn">'+v.n+'</div><div class="vv">'+(v.r?'holds address '+v.r:'(no dog yet)')+'</div></div>').join('');
+  const ch=changed[k];
+  $('#memObjs').innerHTML=Object.keys(s.objs).map(a=>'<div class="obj" data-a="'+a+'" style="'+(S[k-1]&&S[k-1].objs[a]?'animation:none':'')+'"><div class="oa">Dog object at '+a+'</div>'+Object.entries(s.objs[a]).map(([f,v])=>'<div class="fr'+(ch&&ch[0]===a&&ch[1]===f?' chg':'')+'"><span>'+f+'</span><span>'+esc(v)+'</span></div>').join('')+'</div>').join('')||'<div class="src">(empty)</div>';
+  $('#memOut').innerHTML=s.out.length?s.out.map(o=>'<div>'+o+'</div>').join(''):'<div style="opacity:.6">console output appears here</div>';
+  $('#memNote').innerHTML='<p>'+notes[k]+'</p>';
+  $('#memBack').disabled=k===0;$('#memNext').disabled=k===L.length;
+  requestAnimationFrame(drawW)};
+ const drawW=()=>{const box=$('#mem'),bp='var(--bp)';const pairs=[...box.querySelectorAll('.var')].filter(v=>v.dataset.r).map(v=>[v,box.querySelector('.obj[data-a="'+v.dataset.r+'"]'),bp]);wires(box,$('#memWires'),pairs)};
+ $('#memNext').onclick=()=>{if(k<L.length){k++;render()}};$('#memBack').onclick=()=>{if(k>0){k--;render()}};$('#memReset').onclick=()=>{k=0;render()};
+ render();const memRO=new ResizeObserver(drawW);memRO.observe($('#mem'));
+}catch(err){console.error(err)}
+
+/* ---------- DOT ---------- */
+try{
+ code($('#roverCode'),['rover.setMotorSpeeds(50, 50, -50, -50);','rover.getDistanceCm();','rover.setLed1(0, 0, 255);   // right LED blue','rover.playAudio("/home/pi/Desktop/Music/Epic1.wav", 0.9);','rover.stopAudio();']);
+ const O={daisy:{name:'Daisy',breed:'Poodle',age:3,daysAttended:0},max:{name:'Max',breed:'Beagle',age:5,daysAttended:0}};let who='daisy',chg='';
+ const card=()=>{const o=O[who];$('#dotCard').innerHTML='<div class="oa">the object '+who+' points to</div>'+Object.entries(o).map(([f,v])=>'<div class="fr'+(f===chg?' chg':'')+'"><span>'+f+'</span><span>'+(typeof v==='string'?q(v):v)+'</span></div>').join('');const c=BREEDS[o.breed];$('#dotDog').style.cssText='width:96px;height:96px;--fur:'+c[0]+';--ear:'+c[1];chg=''};
+ const M=[['bark()',o=>o.name+' says: Woof!'],['eat()',o=>o.name+' is eating.'],['play()',o=>o.name+' is playing fetch.'],['checkIn()',o=>{o.daysAttended++;chg='daysAttended';return null}],['getAgeInHumanYears()',o=>({ret:o.age*7})],['name',o=>({ret:q(o.name)})]];
+ $('#dotBtns').innerHTML=M.map((m,i)=>'<button class="btn code" data-i="'+i+'">.'+m[0]+'</button>').join('');
+ $('#dotBtns').onclick=e=>{const b=e.target.closest('button');if(!b)return;const m=M[+b.dataset.i];const r=m[1](O[who]);let h;if(r&&r.ret!==undefined){h=m[0]==='name'?'<div class="cmd">System.out.println('+who+'.name);</div><div>'+esc(r.ret.replace(/"/g,''))+'</div>':'<div class="cmd">int h = '+who+'.'+m[0]+';</div><div class="w">// returns '+r.ret+' (age × 7), stored in h</div>'}else h='<div class="cmd">'+who+'.'+m[0]+';</div>'+(r?'<div>'+esc(r)+'</div>':'<div class="w">// no output, but '+who+'.daysAttended is now '+O[who].daysAttended+'</div>');out($('#dotOut'),h,true);card()};
+ seg('#dotWho',w=>{who=w;card()});card();out($('#dotOut'),'<div style="opacity:.6">Tap a method above.</div>');
+}catch(err){console.error(err)}
+
+/* ---------- CONSTRUCTOR ---------- */
+try{
+ fillBreeds($('#cBreed'),'Lab');let useThis=true;
+ const render=()=>{const n=($('#cName').value||'Rex').slice(0,12),b=$('#cBreed').value,a=Math.max(0,Math.min(30,Math.round(+$('#cAge').value||0)));
+  $('#cCall').textContent='Dog '+varName(n)+' = new Dog('+q(n)+', '+q(b)+', '+a+');';
+  const p=useThis?'this.':'';
+  code($('#cCode'),['public Dog(String name, String breed, int age) {','    '+p+'name = name;        // name = '+q(n),'    '+p+'breed = breed;      // breed = '+q(b),'    '+p+'age = age;          // age = '+a,'    '+p+'daysAttended = 0;','}']);
+  mark($('#cCode'),(g,i)=>i>=1&&i<=3?(useThis?'hi':'err'):'');
+  const f=useThis?{name:q(n),breed:q(b),age:a,daysAttended:0}:{name:'null',breed:'null',age:0,daysAttended:0};
+  $('#ctorObj').innerHTML='<div class="oa">the new Dog object</div>'+Object.entries(f).map(([k,v])=>'<div class="fr"><span>'+k+'</span><span>'+esc(v)+'</span></div>').join('');
+  const c=BREEDS[b];$('#cDog').style.cssText='width:72px;height:72px;--fur:'+c[0]+';--ear:'+c[1];
+  $('#cNote').className='note'+(useThis?' good':' bad');
+  $('#cNote').innerHTML=useThis?'<p><code>this.name</code> is the dog\'s field; plain <code>name</code> is the parameter. Each line copies the value handed in into the new object.</p>':'<p>Without <code>this.</code>, <code>name = name;</code> copies the parameter onto <b>itself</b>. The object\'s fields are never touched, so they keep their defaults: <code>null</code> and <code>0</code>. It compiles, which makes this bug sneaky. (<code>daysAttended = 0</code> still works, because there is no parameter with that name.)</p>'};
+ ['#cName','#cBreed','#cAge'].forEach(s=>$(s).addEventListener('input',render));
+ seg('#thisSeg',v=>{useThis=v==='1';render()});render();
+}catch(err){console.error(err)}
+
+/* ---------- OVERLOAD ---------- */
+try{
+ code($('#olBad'),['Dog(String name)  { ... }','Dog(String breed) { ... }  // compile error']);
+ const L=[['','public class Dog {'],['','    public String name, breed;'],['','    public int age;'],['',''],['1','    public Dog() {'],['1','        this.name = "Stray"; this.breed = "Unknown"; this.age = 0;'],['1','    }'],['2','    public Dog(String name) {'],['2','        this.name = name; this.breed = "Unknown"; this.age = 0;'],['2','    }'],['3','    public Dog(String name, String breed, int age) {'],['3','        this.name = name; this.breed = breed; this.age = age;'],['3','    }'],['',''],['','    public void describe() {'],['','        System.out.println(name + ", " + breed + ", age " + age);'],['','    }'],['','}']];
+ const el=$('#olCode');code(el,L);
+ const C=[['3','new Dog("Daisy", "Poodle", 3)','String, String, int','Daisy, Poodle, age 3'],['2','new Dog("Max")','String','Max, Unknown, age 0'],['1','new Dog()','(nothing)','Stray, Unknown, age 0']];
+ $('#olBtns').innerHTML=C.map((c,i)=>'<button class="btn code" data-i="'+i+'">'+esc(c[1])+'</button>').join('');
+ $('#olBtns').onclick=e=>{const b=e.target.closest('button');if(!b)return;const c=C[+b.dataset.i];$('#olBtns').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));mark(el,g=>g===c[0]?'hi':g?'dim':'');out($('#olOut'),'<div class="cmd">'+esc(c[1])+'.describe();</div><div class="w">// arguments: '+c[2]+' → constructor #'+c[0]+'</div><div>'+c[3]+'</div>')};
+ out($('#olOut'),'<div style="opacity:.6">Tap a call above.</div>');
+}catch(err){console.error(err)}
+
+/* ---------- TOSTRING ---------- */
+try{
+ const render=on=>{const L=['public class Dog {','    ...',...(on?['    public String toString() {','        return name + " (" + breed + "), age " + age;','    }']:['    // no toString() here: Java uses Object\'s default']),'}','','Dog daisy = new Dog("Daisy", "Poodle", 3);','System.out.println(daisy);','System.out.println("Checked in: " + daisy);'];code($('#tsCode'),L);mark($('#tsCode'),(g,i)=>on&&i>=2&&i<=4?'hi':'');const s=on?'Daisy (Poodle), age 3':'Dog@1b6d3586';out($('#tsOut'),'<div>'+s+'</div><div>Checked in: '+s+'</div>'+(on?'':'<div class="w">// class name + @ + hash code. Not useful to a human.</div>'))};
+ seg('#tsSeg',v=>render(v==='1'));render(true);
+}catch(err){console.error(err)}
+
+/* ---------- EQUALS ---------- */
+try{
+ code($('#eqCode'),['Dog daisy  = new Dog("Daisy", "Poodle", 3, 9);','Dog daisy2 = new Dog("Daisy", "Poodle", 3, 9);  // Tuesday\'s copy','Dog max    = new Dog("Max", "Beagle", 5, 12);','Dog alias  = daisy;   // no new: copies the arrow','','public boolean equals(Dog that) {','    return this.id == that.id;   // our rule','}']);
+ const V=[['daisy','A'],['alias','A'],['daisy2','B'],['max','C']];
+ const OB={A:['#1','Daisy','Poodle',3,9],B:['#2','Daisy','Poodle',3,9],C:['#3','Max','Beagle',5,12]};
+ $('#eqVars').innerHTML=V.map(v=>'<div class="var" data-v="'+v[0]+'" data-r="'+v[1]+'"><div class="vn">'+v[0]+'</div></div>').join('');
+ $('#eqObjs').innerHTML=Object.entries(OB).map(([k,o])=>'<div class="obj" data-a="'+k+'" style="animation:none"><div class="oa">object '+o[0]+'</div><div class="fr"><span>name</span><span>"'+o[1]+'"</span></div><div class="fr"><span>breed</span><span>"'+o[2]+'"</span></div><div class="fr"><span>age · id</span><span>'+o[3]+' · '+o[4]+'</span></div></div>').join('');
+ let act=[];
+ const E=[['daisy == alias',['daisy','alias'],'true','Both arrows land on the same object #1. <code>==</code> on objects asks only "same object?"'],['daisy == daisy2',['daisy','daisy2'],'false','Same data, but two separate objects (two <code>new</code>s). <code>==</code> compares arrows, so false. This is the classic pitfall: <code>if (daisy == daisy2)</code> never runs.'],['daisy.equals(daisy2)',['daisy','daisy2'],'true','Our rule compares the tags: 9 == 9. Same dog, even though there are two objects.'],['daisy.equals(max)',['daisy','max'],'false','Tag 9 vs tag 12: different dogs.']];
+ $('#eqBtns').innerHTML=E.map((e,i)=>'<button class="btn code" data-i="'+i+'">'+e[0]+'</button>').join('');
+ const drawW=()=>{const box=$('#eqMem'),bp='var(--bp)',mut='var(--mut)';const pairs=[...box.querySelectorAll('.var')].map(v=>{const on=act.includes(v.dataset.v);return [v,box.querySelector('.obj[data-a="'+v.dataset.r+'"]'),on?bp:mut,on?3.5:1.5]});pairs.sort((a,b)=>a[3]-b[3]);wires(box,$('#eqWires'),pairs)};
+ $('#eqBtns').onclick=ev=>{const b=ev.target.closest('button');if(!b)return;const e=E[+b.dataset.i];act=e[1];$('#eqBtns').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));$('#eqVars').querySelectorAll('.var').forEach(v=>v.classList.toggle('hl',act.includes(v.dataset.v)));const tg=act.map(n=>V.find(v=>v[0]===n)[1]);$('#eqObjs').querySelectorAll('.obj').forEach(o=>o.classList.toggle('hl',tg.includes(o.dataset.a)));$('#eqSay').className='note '+(e[2]==='true'?'good':'bad');$('#eqSay').innerHTML='<p><code>'+e[0]+'</code> → <b>'+e[2]+'</b>. '+e[3]+'</p>';drawW()};
+ const eqRO=new ResizeObserver(drawW);eqRO.observe($('#eqMem'));requestAnimationFrame(drawW);
+}catch(err){console.error(err)}
+
+/* ---------- STATIC ---------- */
+try{
+ const N=[['Daisy','Poodle'],['Max','Beagle'],['Luna','Husky'],['Milo','Corgi'],['Coco','Lab'],['Rex','Chow Chow']];let n=0;
+ const draw=f=>{$('#stCount').textContent=n;$('#stKennel').innerHTML=N.slice(0,n).map((d,i)=>'<div class="tagcard" style="padding:8px 10px;'+(i===f?'':'animation:none')+'">'+dogSvg(d[1],40)+'<div class="nm" style="font-size:16px">'+d[0]+'</div><div class="fl">name is its own</div></div>').join('')||'<div class="src" style="align-self:center">No dogs yet, but dogCount already exists.</div>'};
+ draw();
+ $('#stAdd').onclick=()=>{if(n>=N.length){out($('#stOut'),'<div class="w">Demo kennel full. Press Reset.</div>',true);return}n++;draw(n-1);const d=N[n-1];out($('#stOut'),'<div class="cmd">Dog '+d[0].toLowerCase()+' = new Dog("'+d[0]+'", ...);</div><div class="w">// constructor ran dogCount++ → '+n+' (one shared number)</div>',true);const c=$('#stCount');c.classList.remove('flash');void c.offsetWidth;c.classList.add('flash')};
+ $('#stGet').onclick=()=>out($('#stOut'),'<div class="cmd">System.out.println(Dog.getDogCount());</div><div>'+n+'</div>',true);
+ $('#stBad').onclick=()=>out($('#stOut'),'<div class="cmd">public static void introduce() { System.out.println("Hi, I\'m " + name); }</div><div class="e">error: non-static variable name cannot be referenced from a static context</div><div class="w">// which dog\'s name? A static method has no "this". Fix: pass a dog in, introduce(Dog d) → d.name</div>',true);
+ $('#stReset').onclick=()=>{n=0;draw();out($('#stOut'),'<div style="opacity:.6">Reset: dogCount = 0</div>')};
+ out($('#stOut'),'<div style="opacity:.6">Add a few dogs and watch the one shared counter.</div>');
+}catch(err){console.error(err)}
+
+/* ---------- ENCAPSULATION ---------- */
+try{
+ let mode='pub',age=3,chg=false;
+ const render=()=>{const pv=mode==='priv';code($('#enCode'),['public class Dog {','    '+(pv?'private':'public')+' int age;','','    public void setAge(int age) {','        if (age < 0 || age > 30) {','            System.out.println("Invalid age: " + age);','            return;','        }','        this.age = age;','    }','    public int getAge() { return age; }','}']);mark($('#enCode'),(g,i)=>i===1?'hi':'');$('#enObj').innerHTML='<div class="oa">daisy</div><div class="fr"><span>name</span><span>"Daisy"</span></div><div class="fr'+(chg?' chg':'')+'"><span>age</span><span>'+age+(age<0?' (?!)':'')+'</span></div>';chg=false};
+ const B=[['daisy.age = -500;',()=>{if(mode==='pub'){age=-500;chg=true;return '<div class="w">// compiles and runs. Daisy is now -500 years old. Nothing checked it.</div>'}return '<div class="e">error: age has private access in Dog</div><div class="w">// the compiler blocks the back door</div>'}],['daisy.setAge(-500);',()=>'<div>Invalid age: -500</div><div class="w">// rejected by the check; age stays '+age+'</div>'],['daisy.setAge(4);',()=>{age=4;chg=true;return '<div class="w">// passes the check; age is now 4</div>'}],['daisy.getAge()',()=>'<div>'+age+'</div><div class="w">// reading through the getter always works</div>']];
+ $('#enBtns').innerHTML=B.map((b,i)=>'<button class="btn code" data-i="'+i+'">'+b[0]+'</button>').join('')+'<button class="btn ghost" id="enReset">Reset</button>';
+ $('#enBtns').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.id==='enReset'){age=3;render();out($('#enOut'),'<div style="opacity:.6">Reset: age = 3</div>');return}const x=B[+b.dataset.i];const r=x[1]();out($('#enOut'),'<div class="cmd">'+x[0]+'</div>'+r,true);render()};
+ seg('#enSeg',v=>{mode=v;age=3;render();out($('#enOut'),'<div style="opacity:.6">Now age is '+(v==='priv'?'private':'public')+'. Try the first button again.</div>')});
+ render();out($('#enOut'),'<div style="opacity:.6">Try the buttons with public, then switch to private.</div>');
+}catch(err){console.error(err)}
+
+/* ---------- API ---------- */
+try{
+ const IM={a:['private int age;','','public int getAge() {','    return age;','}','public void setAge(int age) {','    if (age < 0 || age > 30) { ... reject ... }','    this.age = age;','}'],b:['private static final int THIS_YEAR = 2026;','private int birthYear;','','public int getAge() {','    return THIS_YEAR - birthYear;','}','public void setAge(int age) {','    if (age < 0 || age > 30) { ... reject ... }','    birthYear = THIS_YEAR - age;','}']};
+ let cur='a';code($('#apiClient'),['Dog daisy = new Dog(9, "Daisy", "Poodle", 3);','daisy.setAge(4);','System.out.println(daisy.getName() + " is " + daisy.getAge());']);
+ const render=()=>{code($('#apiImpl'),IM[cur]);out($('#apiOut'),'<div style="opacity:.6">Press Run client.</div>')};
+ seg('#apiSeg',v=>{cur=v;render()});render();
+ $('#apiRun').onclick=()=>out($('#apiOut'),'<div>Daisy is 4</div><div class="w">// implementation '+cur.toUpperCase()+': '+(cur==='a'?'stored age = 4':'stored birthYear = 2022, computed 2026 − 2022')+'. Same answer, client untouched.</div>');
+}catch(err){console.error(err)}
+
+/* ---------- INHERITANCE ---------- */
+try{
+ code($('#inCode'),[['','public class Dog extends Pet {'],['','    private String breed;          // only what\'s new'],['',''],['','    public Dog(int id, String name, String breed, int age) {'],['','        super(id, name, age);      // Pet\'s constructor'],['','        this.breed = breed;'],['','    }'],['','    public String getBreed() { return breed; }'],['','}']]);
+ const box=$('#inTree');
+ const col=(x,w,title,items,stroke,fill,dup)=>{let h='<rect x="'+x+'" y="Y" width="'+w+'" height="H" rx="10" fill="'+fill+'" stroke="'+stroke+'" stroke-width="2"/><text x="'+(x+w/2)+'" y="TTLY" text-anchor="middle" font-family="Fredoka,sans-serif" font-size="17" font-weight="600" fill="var(--ink)">'+title+'</text>';items.forEach((it,i)=>{const d=dup&&dup.includes(it);h+=(d?'<rect x="'+(x+6)+'" y="IY'+i+'" width="'+(w-12)+'" height="19" rx="4" fill="#ffc93c" opacity=".55"/>':'')+'<text x="'+(x+12)+'" y="TY'+i+'" font-family="JetBrains Mono,monospace" font-size="13" fill="var(--ink)">'+it+'</text>'});return h};
+ const place=(s,y,n)=>{s=s.replace(/TTLY/g,y+24).replace(/="Y"/g,'="'+y+'"').replace(/="H"/g,'="'+(36+n*21)+'"');for(let i=0;i<n;i++){s=s.replace('IY'+i,y+33+i*21).replace('TY'+i,y+47+i*21)}return s};
+ const draw=m=>{let s;if(m==='before'){const dog=['id','name','age','breed','getName()','checkIn()','getBreed()'],cat=['id','name','age','indoor','getName()','checkIn()','isIndoor()'],dup=['id','name','age','getName()','checkIn()'];s='<svg viewBox="0 0 400 230" role="img" aria-label="Dog and Cat classes with duplicated code">'+place(col(20,170,'Dog',dog,'var(--bp)','var(--bpsoft)',dup),10,7)+place(col(210,170,'Cat',cat,'#e8954a','var(--tagsoft)',dup),10,7)+'<rect x="20" y="198" width="14" height="14" rx="3" fill="#ffc93c" opacity=".55"/><text x="42" y="210" font-family="Nunito Sans,sans-serif" font-size="13" fill="var(--mut)">yellow = the same code, written twice</text></svg>'}else{const pet=['id, name, age','getName()','checkIn()','speak()'];s='<svg viewBox="0 0 400 282" role="img" aria-label="Pet superclass with Dog and Cat subclasses">'+place(col(110,180,'Pet (superclass)',pet,'#7c4dcc','var(--petbg)'),6,4)+'<polygon points="140,128 130,146 150,146" fill="var(--bg)" stroke="var(--ink)" stroke-width="2"/><polygon points="260,128 250,146 270,146" fill="var(--bg)" stroke="var(--ink)" stroke-width="2"/><path d="M140 146L95 196M260 146L305 196" stroke="var(--ink)" stroke-width="2"/><text x="200" y="182" text-anchor="middle" font-family="Nunito Sans,sans-serif" font-size="13" font-style="italic" fill="var(--mut)">is a</text>'+place(col(20,150,'Dog',['breed','getBreed()'],'var(--bp)','var(--bpsoft)'),196,2)+place(col(230,150,'Cat',['indoor','isIndoor()'],'#e8954a','var(--tagsoft)'),196,2)+'</svg>'}box.innerHTML=s};
+ seg('#inSeg',draw);draw('after');
+ const F=[['daisy.getName()','from Pet','pet','Written once in Pet; every Dog and Cat gets it.'],['daisy.checkIn()','from Pet','pet','Inherited. Prints "Daisy checked in".'],['daisy.getBreed()','Dog\'s own','dog','Only dogs have a breed, so it lives in Dog.'],['daisy.toString()','from Object','objc','If nobody overrides it, it comes all the way from Object.']];
+ $('#inFrom').innerHTML=F.map((f,i)=>'<button data-i="'+i+'"><span>'+f[0]+'</span><span class="'+f[2]+'">'+f[1]+'</span></button>').join('')+'<div class="src" id="inSay" style="min-height:1.5em"></div>';
+ $('#inFrom').onclick=e=>{const b=e.target.closest('button');if(b)$('#inSay').textContent=F[+b.dataset.i][3]};
+ const T=[['A Dog is a Pet',true,'Yes: Dog extends Pet.'],['A Cat is a Pet',true,'Yes: Cat extends Pet.'],['A Pet is a Dog',false,'No: a Pet might be a cat.'],['A Dog is a Cat',false,'No: they are siblings, not parent and child.']];
+ $('#isa').innerHTML=T.map((t,i)=>'<div class="q" data-i="'+i+'"><span>'+t[0]+'</span><span class="row" style="gap:6px"><button class="btn" data-a="1" style="min-height:38px;padding:4px 12px">true</button><button class="btn" data-a="0" style="min-height:38px;padding:4px 12px">false</button></span></div>').join('');
+ $('#isa').onclick=e=>{const b=e.target.closest('button');if(!b)return;const row=b.closest('.q'),t=T[+row.dataset.i],ok=(b.dataset.a==='1')===t[1];row.className='q '+(ok?'r':'w');row.firstElementChild.textContent=t[0]+(ok?' ✓ ':' ✗ ')+t[2]};
+}catch(err){console.error(err)}
+
+/* ---------- OVERRIDE ---------- */
+try{
+ const render=m=>{const on=m==='1',ty=m==='t';const L=['// Pet.java','public void speak() { System.out.println(name + " makes a sound"); }','','// Dog.java',...(on||ty?['@Override','public void '+(ty?'speek':'speak')+'() { System.out.println(getName() + " says: Woof!"); }']:['// (nothing: inherits Pet\'s speak)']),'','// main','Pet[] pets = { daisy, tom };','for (int i = 0; i < pets.length; i++) pets[i].speak();'];code($('#ovCode'),L);mark($('#ovCode'),(g,i)=>(on||ty)&&(i===4||i===5)?(ty?'err':'hi'):'');
+  const dog=on?'Woof!':'makes a sound',cat=on?'Meow!':'makes a sound';$('#ovDog').textContent=ty?'…':dog;$('#ovCat').textContent=ty?'…':cat;$('#ovDog').classList.toggle('on',on);$('#ovCat').classList.toggle('on',on);
+  if(ty)out($('#ovOut'),'<div class="e">Dog.java: error: method does not override or implement a method from a supertype</div><div class="w">// @Override caught the typo. Without @Override this would compile,</div><div class="w">// add a useless speek() method, and Daisy would still "make a sound".</div>');
+  else out($('#ovOut'),on?'<div>Daisy says: Woof!</div><div>Tom says: Meow!</div><div class="w">// (Cat.java overrides speak() the same way)</div>':'<div>Daisy makes a sound</div><div>Tom makes a sound</div><div class="w">// every pet sounds the same</div>')};
+ seg('#ovSeg',render);render('1');
+}catch(err){console.error(err)}
+
+/* ---------- QUIZ ---------- */
+try{
+ const Q=[['You write one Dog class and create 50 Dog objects. How many blueprints exist?',['50','1','51'],1,'One class (blueprint), any number of objects built from it.'],['Which line creates a new object?',['Dog d;','Dog d = new Dog("Rex");','Dog e = d;'],1,'Only new builds an object. Dog d; makes an empty variable; Dog e = d; copies an address.'],['Inside a constructor, what does this.name = name; do?',['Copies the parameter into the object\'s field','Copies the field into the parameter','Nothing'],0,'this.name is the field of the object being built; name alone is the parameter.'],['dogCount is declared static. How many copies are there with 30 dogs?',['30','1','0'],1,'static fields belong to the class: one shared copy, no matter how many objects.'],['Why make age private and add setAge(int)?',['It runs faster','So every change goes through a check','Java requires it'],1,'One door means one place to reject bad values like -500, and you can change the storage later.'],['a and b are two Dog objects with identical fields made with two new calls. What is a == b?',['true','false','compile error'],1,'== on objects compares addresses. Two new calls = two different objects. Use a.equals(b) for your own rule.'],['Dog extends Pet. Which is true?',['Every Pet is a Dog','Every Dog is a Pet','Dog cannot add new fields'],1,'Is-a goes from child to parent. Dogs are Pets; Pets are not necessarily Dogs.']];
+ const ans={};
+ const draw=()=>{$('#quizBox').innerHTML=Q.map((x,i)=>'<div class="qq"><p>'+(i+1)+'. '+esc(x[0])+'</p><div class="opts">'+x[1].map((o,j)=>{let c='';if(ans[i]!==undefined){if(j===x[2])c='r';else if(j===ans[i])c='w'}return '<button class="'+c+'" data-q="'+i+'" data-j="'+j+'">'+esc(o)+'</button>'}).join('')+'</div>'+(ans[i]!==undefined?'<div class="why">'+(ans[i]===x[2]?'Right. ':'Not quite. ')+esc(x[3])+'</div>':'')+'</div>').join('');const done=Object.keys(ans).length;const sc=Object.entries(ans).filter(([i,j])=>Q[i][2]===j).length;$('#qScore').textContent=done?'Score: '+sc+' / '+done:''};
+ $('#quizBox').onclick=e=>{const b=e.target.closest('button');if(!b)return;const i=+b.dataset.q;if(ans[i]!==undefined)return;ans[i]=+b.dataset.j;draw()};
+ $('#qReset').onclick=()=>{for(const k in ans)delete ans[k];draw()};
+ draw();
+}catch(err){console.error(err)}
+/* ---------- THINK FIRST ---------- */
+try{
+ const T={s:'A <b>Student</b> has a name, a major, a GPA and a class year (fields), and can enroll(), study() and submitHomework() (methods).',c:'A <b>Car</b> has a color, a speed, a fuel level and a license plate (fields), and can drive(), brake(), park() and refuel() (methods).',d:'A <b>Dog</b> has a name, a breed, an age and days attended (fields), and can bark(), eat(), play() and checkIn() (methods). That is the class you will build this week.'};
+ $('#think').onclick=e=>{const b=e.target.closest('button');if(!b)return;$('#think').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));$('#thinkSay').innerHTML='<p>'+T[b.dataset.k]+'</p>'};
+}catch(err){console.error(err)}
+
+/* ---------- COUNTER ---------- */
+try{
+ code($('#ctrApi'),['public class Counter {','    private final String name;','    private int count;','    public Counter(String id)  { name = id; }','    public void increment()    { count++; }','    public int tally()         { return count; }','    public String toString()   { return count + " " + name; }','}']);
+ let h=0,t=0;
+ const show=last=>{$('#ctrH').textContent=h;$('#ctrT').textContent=t;out($('#ctrOut'),(last?'<div class="w">// '+last+'</div>':'')+'<div class="cmd">StdOut.println(heads);</div><div>'+h+' heads</div><div class="cmd">StdOut.println(tails);</div><div>'+t+' tails</div><div class="cmd">StdOut.println("delta: " + Math.abs(heads.tally() - tails.tally()));</div><div>delta: '+Math.abs(h-t)+'</div>')};
+ const flip=n=>{let hh=0;for(let i=0;i<n;i++){if(Math.random()<0.5){h++;hh++}else t++}show(n===1?(hh?'heads: Daisy\'s group walks first':'tails: Max\'s group walks first'):n+' flips: '+hh+' heads.increment() calls, '+(n-hh)+' tails.increment() calls')};
+ $('#ctr1').onclick=()=>flip(1);$('#ctr20').onclick=()=>flip(20);$('#ctrR').onclick=()=>{h=0;t=0;show('reset: two brand-new Counter objects')};
+ out($('#ctrOut'),'<div class="cmd">Counter heads = new Counter("heads");</div><div class="cmd">Counter tails = new Counter("tails");</div><div class="w">// heads: Daisy\'s group walks first; tails: Max\'s group</div>');
+}catch(err){console.error(err)}
+
+/* ---------- GENERICS ---------- */
+try{
+ code($('#genCode'),['public class Box<T> {','    private T value;','    public void set(T value) { this.value = value; }','    public T get()           { return value; }','}','','Box<Integer> treats  = new Box<>();','Box<String>  tags    = new Box<>();','Box<Dog>     records = new Box<>();']);
+ const TY=[['Integer','IntBox'],['String','StringBox'],['Dog','DogBox'],['Cat','CatBox'],['Double','DoubleBox'],['Character','CharBox'],['Boolean','BoolBox'],['Pet','PetBox']];
+ let gn=3;
+ const draw=fresh=>{$('#genWithout').innerHTML=TY.slice(0,gn).map((x,i)=>'<span class="crate" style="'+(i===fresh?'':'animation:none')+'">'+x[1]+'.java</span>').join('');$('#genWith').innerHTML='<span class="crate big">Box&lt;T&gt;.java</span><div style="margin-top:6px;width:100%">'+TY.slice(0,gn).map((x,i)=>'<span class="lblchip" style="'+(i===fresh?'':'animation:none')+'">Box&lt;'+x[0]+'&gt;</span>').join('')+'</div>';$('#genCount').innerHTML='Classes to write, test and debug: <span style="color:var(--bad)">'+gn+'</span> without generics, <span style="color:var(--ok)">1</span> with.';const nx=TY[gn];$('#genMore').textContent=nx?'Bea needs a box for: '+nx[0]:'Bea is out of ideas';$('#genMore').disabled=!nx};
+ draw();
+ $('#genMore').onclick=()=>{if(gn<TY.length){gn++;draw(gn-1)}};
+ $('#genReset').onclick=()=>{gn=3;draw()};
+ let T='Integer';
+ const V=[['42','int'],['"Hello"','String'],['daisy','Dog']];
+ const vn={Integer:'n',String:'s',Dog:'d'};
+ $('#genPut').innerHTML=V.map((v,i)=>'<button class="btn code" data-i="'+i+'">box.set('+esc(v[0])+');</button>').join('');
+ const head=()=>'<div class="cmd">Box&lt;'+T+'&gt; box = new Box&lt;&gt;();</div>';
+ $('#genPut').onclick=e=>{const b=e.target.closest('button');if(!b)return;const v=V[+b.dataset.i];const ok=v[1]===T||(T==='Integer'&&v[1]==='int');let h=head()+'<div class="cmd">box.set('+esc(v[0])+');</div>';if(ok){h+='<div class="w">// compiles'+(v[1]==='int'?': 42 is autoboxed into an Integer (next section)':'')+'</div><div class="cmd">'+T+' '+vn[T]+' = box.get();</div><div class="w">// no cast needed: the compiler knows it\'s a '+T+'</div>'}else{h+='<div class="e">error: incompatible types: '+v[1]+' cannot be converted to '+T+'</div><div class="w">// caught at compile time, before the program ever runs</div>'}out($('#genOut'),h)};
+ seg('#genT',v=>{T=v;out($('#genOut'),head()+'<div style="opacity:.6">Now try putting things in.</div>')});
+ out($('#genOut'),head()+'<div style="opacity:.6">Try putting each thing in this box.</div>');
+}catch(err){console.error(err)}
+
+/* ---------- WRAPPERS ---------- */
+try{
+ let bare='5',gift=null;
+ const bump=el=>{el.style.animation='none';void el.offsetWidth;el.style.animation='pop .4s'};
+ const draw=dir=>{$('#wBare').textContent=bare;$('#wGiftV').textContent=gift===null?'?':gift;$('#wGift').classList.toggle('empty',gift===null);$('#wAuto').classList.toggle('on',dir==='a');$('#wUn').classList.toggle('on',dir==='u');if(dir==='a')bump($('#wGift'));if(dir==='u')bump($('#wBare'))};
+ const B=[
+  ['int num = 5;',()=>{bare='5';gift=null;draw('');return '<div class="w">// a bare value: no object, no methods</div>'}],
+  ['Integer obj = num;',()=>{gift=bare;draw('a');return '<div class="w">// autoboxing: Java wraps '+bare+' in an Integer object for you</div>'}],
+  ['int p = obj + 1;',()=>{if(gift===null)return '<div class="e">// run "Integer obj = num;" first: there is nothing in the box yet</div>';bare=String(+gift+1);draw('u');return '<div class="w">// auto-unboxing: Java takes '+gift+' out of the box, adds 1, so p = '+bare+'</div>'}],
+  ['Box<int> b;',()=>{draw('');return '<div class="e">error: unexpected type</div><div class="e">  required: reference</div><div class="e">  found:    int</div><div class="w">// generics only hold objects</div>'}],
+  ['Box<Integer> b = new Box<>(); b.set(7);',()=>{gift='7';draw('a');return '<div class="w">// 7 is autoboxed on its way into the box</div>'}],
+  ['Integer a = 1000, c = 1000; a == c',()=>'<div>false</div><div class="w">// two separate Integer objects: == compares the arrows</div>'],
+  ['a.equals(c)',()=>'<div>true</div><div class="w">// equals compares the values inside: 1000 and 1000</div>']
+ ];
+ $('#wBtns').innerHTML=B.map((b,i)=>'<button class="btn code" data-i="'+i+'">'+esc(b[0])+'</button>').join('');
+ $('#wBtns').onclick=e=>{const b=e.target.closest('button');if(!b)return;const x=B[+b.dataset.i];const r=x[1]();out($('#wOut'),'<div class="cmd">'+esc(x[0])+'</div>'+r,true)};
+ draw('');out($('#wOut'),'<div style="opacity:.6">Run the first three lines in order, then try the error and the gotcha.</div>');
+}catch(err){console.error(err)}
+
+/* ---------- ARRAY OF OBJECTS ---------- */
+try{
+ const L=['Dog[] kennel = new Dog[5];','kennel[0] = new Dog("Daisy", 3);','kennel[1] = new Dog("Balto", 5);','kennel[0].bark();','for (Dog d : kennel) if (d != null) d.bark();','kennel[2].bark();'];
+ code($('#kaCode'),L);
+ const D={daisy:['Daisy','Poodle',3],balto:['Balto','Husky',5]};
+ const cl=o=>JSON.parse(JSON.stringify(o));
+ const st={arr:false,slots:[null,null,null,null,null],dogs:[],out:[],err:-1};
+ const ap=[s=>{s.arr=true},s=>{s.dogs.push('daisy');s.slots[0]='daisy'},s=>{s.dogs.push('balto');s.slots[1]='balto'},s=>{s.out.push('Daisy says: Woof!')},s=>{s.out.push('Daisy says: Woof!','Balto says: Woof!')},s=>{s.err=2;s.out.push('<span class="e">Exception in thread "main" java.lang.NullPointerException</span>','<span class="w">// Cannot invoke "Dog.bark()": kennel[2] is null</span>')}];
+ const S=[cl(st)];ap.forEach(f=>{f(st);S.push(cl(st))});
+ const N=['Press <b>Next</b> to run the first line.','Five kennels, <b>zero dogs</b>. Each slot holds <code>null</code>: "no dog here yet".','<code>new Dog(…)</code> builds Daisy, and slot 0 stores an arrow to her. The array holds arrows to dogs, not the dogs themselves.','Balto moves into slot 1. Slots 2 to 4 are still empty.','Java follows the arrow in slot 0 and runs Daisy\'s <code>bark()</code>.','The loop visits all five slots; the <code>null</code> check quietly skips the three empty ones.','Slot 2 is empty, so there is no dog to bark, and the program crashes. Fix: check <code>kennel[2] != null</code> first, like the loop did.'];
+ let k=0;
+ const render=()=>{const s=S[k],prev=S[k-1];mark($('#kaCode'),(g,i)=>i===k-1?(k===6?'err':'hi'):i>=k?'dim':'');$('#kaCnt').textContent='Line '+k+' of '+L.length;
+  $('#kaSlots').innerHTML=[0,1,2,3,4].map(i=>{if(!s.arr)return '<div class="slot" style="opacity:.25;border-style:dashed"></div>';const r=s.slots[i];return '<div class="slot'+(r?' ref':'')+(s.err===i?' err':'')+'" data-r="'+(r||'')+'">'+(r?'':'null')+'</div>'}).join('');
+  $('#kaPen').innerHTML=s.dogs.map(d=>'<div class="obj" data-d="'+d+'" style="'+(prev&&prev.dogs.includes(d)?'animation:none':'')+'">'+dogSvg(D[d][1],44)+'<div><div class="oa">Dog object</div><div>name "'+D[d][0]+'"</div><div>age '+D[d][2]+'</div></div></div>').join('')||'<div class="src" style="align-self:center">'+(s.arr?'No Dog objects yet.':'(no array yet)')+'</div>';
+  $('#kaOut').innerHTML=s.out.length?s.out.map(o=>'<div>'+o+'</div>').join(''):'<div style="opacity:.6">console output appears here</div>';
+  $('#kaNote').className='note'+(k===6?' bad':'');$('#kaNote').innerHTML='<p>'+N[k]+'</p>';
+  $('#kaBack').disabled=k===0;$('#kaNext').disabled=k===L.length;requestAnimationFrame(drawW)};
+ const drawW=()=>{const box=$('#kaViz'),R=box.getBoundingClientRect();let h='';box.querySelectorAll('.slot[data-r]').forEach(sl=>{const d=sl.dataset.r;if(!d)return;const o=box.querySelector('.obj[data-d="'+d+'"]');if(!o)return;const a=sl.getBoundingClientRect(),b=o.getBoundingClientRect();const x1=a.left+a.width/2-R.left,y1=a.top+a.height/2-R.top,x2=b.left+b.width/2-R.left,y2=b.top-R.top-2,my=(y1+y2)/2;h+='<path d="M'+x1+' '+y1+'C'+x1+' '+my+' '+x2+' '+my+' '+x2+' '+(y2-8)+'" fill="none" stroke="var(--bp)" stroke-width="2.5"/><path d="M'+(x2-6)+' '+(y2-10)+'L'+x2+' '+y2+'L'+(x2+6)+' '+(y2-10)+'Z" fill="var(--bp)"/><circle cx="'+x1+'" cy="'+y1+'" r="5" fill="var(--bp)"/>'});$('#kaWires').innerHTML=h};
+ $('#kaNext').onclick=()=>{if(k<L.length){k++;render()}};$('#kaBack').onclick=()=>{if(k>0){k--;render()}};$('#kaReset').onclick=()=>{k=0;render()};
+ render();const kaRO=new ResizeObserver(drawW);kaRO.observe($('#kaViz'));
+}catch(err){console.error(err)}
+
+/* ---------- SEARCH ---------- */
+try{
+ const A=[2,5,8,12,16,23,38,45,56,63,72,77,84,91,95,99];
+ code($('#linCode'),['public static int linearSearch(int[] a, int target) {','    for (int i = 0; i < a.length; i++) {','        if (a[i] == target) return i;   // found: its index','    }','    return -1;                          // checked all: not found','}']);
+ code($('#binCode'),['public static int binarySearch(int[] a, int target) {','    int lo = 0, hi = a.length - 1;','    while (lo <= hi) {','        int mid = (lo + hi) / 2;               // integer division','        if (a[mid] == target) return mid;      // found','        else if (a[mid] < target) lo = mid + 1; // go right','        else hi = mid - 1;                     // go left','    }','    return -1;                                 // range empty: not found','}']);
+ let tg,Ls,Bs;
+ const draw=()=>{$('#sLin').innerHTML=A.map((v,i)=>{const c=i===Ls.f?'fd':i===Ls.last?'now':i<Ls.i?'out':'';return '<span class="'+c+'">'+v+'</span>'}).join('');
+  $('#sBin').innerHTML=A.map((v,i)=>{const c=i===Bs.f?'fd':i===Bs.mid?'mid':(i<Bs.lo||i>Bs.hi)?'out':'';return '<span class="'+c+'">'+v+'</span>'}).join('');
+  $('#sBinLab').innerHTML=A.map((v,i)=>{let t='';if(!Bs.done){if(i===Bs.lo&&i===Bs.hi)t='lo/hi';else if(i===Bs.lo)t='lo';else if(i===Bs.hi)t='hi'}return '<span>'+t+'</span>'}).join('');
+  const lab=(o)=>o.n+(o.n===1?' check':' checks')+(o.done?(o.f>=0?', found':', not found'):'');$('#sLinN').textContent=lab(Ls);$('#sBinN').textContent=lab(Bs)};
+ const reset=()=>{tg=Math.round(+$('#sTarget').value);if(!isFinite(tg))tg=72;Ls={i:0,last:-1,n:0,done:false,f:-1};Bs={lo:0,hi:15,mid:-1,n:0,done:false,f:-1};draw();out($('#sOut'),'<div style="opacity:.6">Looking for '+tg+'. Step through both searches and compare the counters.</div>')};
+ const stepL=()=>{if(Ls.done)return '';const i=Ls.i;Ls.last=i;Ls.n++;let m='a['+i+'] = '+A[i];if(A[i]===tg){Ls.done=true;Ls.f=i;m+=' → found, return '+i}else{Ls.i++;m+=' ≠ '+tg;if(Ls.i>=A.length){Ls.done=true;m+=' → end of array, return -1'}}return '<div><span class="cmd">linear</span> check '+Ls.n+': '+m+'</div>'};
+ const stepB=()=>{if(Bs.done)return '';const mid=(Bs.lo+Bs.hi)>>1;Bs.mid=mid;Bs.n++;let m='lo='+Bs.lo+', hi='+Bs.hi+', mid='+mid+': a['+mid+'] = '+A[mid];if(A[mid]===tg){Bs.done=true;Bs.f=mid;m+=' → found, return '+mid}else if(A[mid]<tg){Bs.lo=mid+1;m+=' < '+tg+' → go right, lo = '+Bs.lo}else{Bs.hi=mid-1;m+=' > '+tg+' → go left, hi = '+Bs.hi}if(!Bs.done&&Bs.lo>Bs.hi){Bs.done=true;m+='. Now lo > hi: range empty, return -1'}return '<div><span class="w">binary</span> check '+Bs.n+': '+m+'</div>'};
+ $('#sStepL').onclick=()=>{const h=stepL();draw();if(h)out($('#sOut'),h,true)};
+ $('#sStepB').onclick=()=>{const h=stepB();draw();if(h)out($('#sOut'),h,true)};
+ $('#sAll').onclick=()=>{while(!Ls.done)stepL();let bl='';while(!Bs.done)bl=stepB();draw();out($('#sOut'),'<div><span class="cmd">linear</span>: '+Ls.n+' checks'+(Ls.f>=0?', found at index '+Ls.f:', not found')+'</div><div><span class="w">binary</span>: '+Bs.n+' checks'+(Bs.f>=0?', found at index '+Bs.f:', not found')+'</div>')};
+ $('#sReset').onclick=reset;$('#sTarget').addEventListener('change',reset);
+ $('#search').querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{$('#sTarget').value=b.dataset.t;reset()});
+ reset();
+}catch(err){console.error(err)}
+
+/* ---------- ANTS ---------- */
+try{
+ const M=[['1,000',1e3,'10 m','about the length of a classroom','17 minutes',10],['1 million',1e6,'10 km','a 10 km run','12 days',20],['2 billion',2e9,'20,000 km','halfway around Earth','63 years',31],['38 billion',3.84e10,'384,400 km','from Earth to the Moon','1,200 years',36],['15 trillion',1.5e13,'150 million km','from Earth to the Sun','470,000 years',44],['4 quintillion',4e18,'4.2 light-years','to Proxima Centauri, the next star','127 billion years (9× the age of the universe)',62],['24 sextillion',2.4e22,'25,000 light-years','to the Canis Major Dwarf, the next galaxy','750 trillion years',75],['about 10²⁹',1e29,'93 billion light-years','across the observable universe','3 × 10²¹ years',97],['10⁸⁰',1e80,'10⁸⁰ cm','every atom in the universe: there is nothing bigger to search','forget about it',266]];
+ let idx=1,p=0,q=0,anim=0;
+ const s=$('#antSvg');
+ const ant=(x,y,c)=>'<g transform="translate('+x+','+y+')" fill="'+c+'"><ellipse cx="-7" cy="-5" rx="4" ry="3"/><ellipse cx="0" cy="-5" rx="3" ry="2.5"/><ellipse cx="7" cy="-6" rx="3.2" ry="3"/><path d="M-6 -3l-3 4M0 -3v4M5 -3l3 4M9 -8l4 -4" stroke="'+c+'" stroke-width="1.3" fill="none"/></g>';
+ const draw=()=>{const W=s.clientWidth,H=s.clientHeight;if(!W)return;const x0=20,x1=W-78,by=H-44,ty=30,ax=(x0+x1)/2,hx=W-40,m=M[idx];
+  let h='<path d="M'+x0+' '+by+'L'+ax+' '+ty+'L'+x1+' '+by+'Z" fill="#e9b949" opacity=".85"/>';
+  h+='<path d="M'+x0+' '+(by+14)+'H'+x1+'" stroke="var(--bad)" stroke-width="2"/><path d="M'+(x1-8)+' '+(by+9)+'L'+x1+' '+(by+14)+'L'+(x1-8)+' '+(by+19)+'Z" fill="var(--bad)"/>';
+  h+='<path d="M'+hx+' '+by+'V'+ty+'" stroke="var(--bp)" stroke-width="2"/><path d="M'+(hx-5)+' '+(ty+8)+'L'+hx+' '+ty+'L'+(hx+5)+' '+(ty+8)+'Z" fill="var(--bp)"/>';
+  h+='<text x="'+((x0+x1)/2)+'" y="'+(by+36)+'" text-anchor="middle" font-size="14" font-weight="700" fill="var(--bad)" font-family="Nunito Sans,sans-serif">width = '+m[2]+'</text>';
+  h+='<text x="'+(hx-12)+'" y="'+(ty+24)+'" text-anchor="end" font-size="14" font-weight="700" fill="var(--bp)" font-family="Nunito Sans,sans-serif" style="paint-order:stroke;stroke:var(--bg);stroke-width:4px">height = '+m[5]+' cm</text>';
+  h+=ant(x0+p*(x1-x0)+8,by+10,'var(--bad)')+ant(hx-12,by-q*(by-ty)+2,'var(--bp)');
+  s.innerHTML=h};
+ const pct=()=>{const m=M[idx],v=100*m[5]/m[1];return v>=1e-4?Number(v.toPrecision(1))+'%':'less than 0.0001%'};
+ const show=()=>{const m=M[idx];$('#antTitle').textContent='Toy: the ant race, n = '+m[0]+' items';$('#antLin').textContent=m[4];$('#antBin').textContent=m[5]+' seconds';$('#antSay').innerHTML='<p>The line of items is '+m[2]+' long: '+m[3]+'. The triangle is only '+m[5]+' cm tall. Press <b>Race!</b></p>';p=0;q=0;draw()};
+ $('#antN').addEventListener('input',()=>{idx=+$('#antN').value;cancelAnimationFrame(anim);show()});
+ $('#antGo').onclick=()=>{cancelAnimationFrame(anim);const m=M[idx],t0=performance.now(),dur=1600,share=m[5]/m[1];const step=t=>{const u=Math.min(1,(t-t0)/dur);q=u;p=u*share;draw();if(u<1)anim=requestAnimationFrame(step);else $('#antSay').innerHTML='<p>The binary ant reached the top in <b>'+m[5]+' seconds</b>. In that time the linear ant covered <b>'+pct()+'</b> of the width. It still needs '+m[4]+'.</p>'};anim=requestAnimationFrame(step)};
+ show();const antRO=new ResizeObserver(draw);antRO.observe($('#antFig'));
+}catch(err){console.error(err)}
+
+/* ---------- SORTING SOCKET ---------- */
+try{
+ code($('#cmpDecl'),['public class Dog implements Comparable<Dog> {','    private String name;','    private int age;','    // constructors, getters ...','','    @Override','    public int compareTo(Dog that) {','        return Integer.compare(this.age, that.age);','    }','}']);
+ const P=[[true,'String[] names = {"Zoe", "Alice", "Bob", "Charlie"};<br>Arrays.sort(names);','[Alice, Bob, Charlie, Zoe]','String already implements Comparable: A to Z.'],[true,'Integer[] scores = {5, 2, 8, 1, 9};<br>Arrays.sort(scores);','[1, 2, 5, 8, 9]','Integer implements Comparable: small to big.'],[true,'Arrays.sort(dogs);   // Dog implements Comparable&lt;Dog&gt;','[Luna (age 2), Daisy (age 3), Balto (age 5), Max (age 7)]','Arrays.sort calls our compareTo: youngest first. Bea is happy.'],[false,'Arrays.sort(dogs);   // plain Dog, no compareTo','Exception in thread "main" java.lang.ClassCastException: class Dog cannot be cast to class java.lang.Comparable (…)','It compiles, then crashes when it runs: Arrays.sort has no rule to call.']];
+ $('#plugs').onclick=e=>{const b=e.target.closest('.plug');if(!b)return;const x=P[+b.dataset.p];$('#plugs').querySelectorAll('.plug').forEach(p=>p.classList.toggle('in',p===b));const sk=$('#sockBox');sk.classList.toggle('ok',x[0]);sk.classList.toggle('no',!x[0]);out($('#plugOut'),'<div class="cmd">'+x[1]+'</div><div'+(x[0]?'':' class="e"')+'>'+x[2]+'</div><div class="w">// '+x[3]+'</div>')};
+ out($('#plugOut'),'<div style="opacity:.6">Tap a plug to push it into the socket. Try the plain Dog last.</div>');
+}catch(err){console.error(err)}
+
+/* ---------- COMPARETO ---------- */
+try{
+ const DG=[{n:'Rex',b:'Beagle',a:3,id:5},{n:'Balto',b:'Husky',a:5,id:1},{n:'Daisy',b:'Poodle',a:3,id:9},{n:'Coco',b:'Corgi',a:3,id:2}];
+ const jc=(x,y)=>{const m=Math.min(x.length,y.length);for(let i=0;i<m;i++){if(x[i]!==y[i])return x.charCodeAt(i)-y.charCodeAt(i)}return x.length-y.length};
+ const ic=(x,y)=>x<y?-1:x>y?1:0;
+ const head=['@Override','public int compareTo(Dog that) {'];
+ const R={age:{f:(x,y)=>ic(x.a,y.a),c:[...head,'    return Integer.compare(this.age, that.age);','}'],w:'the three 3-year-olds tie, so they keep their original order (stable sort)'},
+  name:{f:(x,y)=>jc(x.n,y.n),c:[...head,'    return this.name.compareTo(that.name);','}'],w:'A to Z by name'},
+  ageName:{f:(x,y)=>x.a!==y.a?ic(x.a,y.a):jc(x.n,y.n),c:[...head,'    if (this.age != that.age) {','        return Integer.compare(this.age, that.age);','    }','    return this.name.compareTo(that.name);   // tie: by name','}'],w:'youngest first; ties broken A to Z'},
+  ageId:{f:(x,y)=>x.a!==y.a?ic(x.a,y.a):ic(x.id,y.id),c:[...head,'    if (this.age != that.age) {','        return Integer.compare(this.age, that.age);','    }','    return Integer.compare(this.id, that.id);  // tie: by tag id','}'],w:'youngest first; ties broken by tag id'}};
+ let rule='age',sorted=false;
+ const card=(d,i)=>'<div class="sc" data-n="'+d.n+'"><span class="pos">'+(i+1)+'</span>'+dogSvg(d.b,40)+'<b>'+d.n+'</b>age '+d.a+' · id '+d.id+'</div>';
+ $('#laneBefore').innerHTML=DG.map(card).join('');
+ const drawAfter=src=>{const lane=$('#laneAfter');if(!sorted){lane.innerHTML='<div class="src" style="grid-column:1/-1;padding:18px 0">Press <code>Arrays.sort(dogs);</code></div>';return}const old={};(src||lane).querySelectorAll('.sc').forEach(c=>old[c.dataset.n]=c.getBoundingClientRect());const arr=DG.slice().sort(R[rule].f);lane.innerHTML=arr.map(card).join('');lane.querySelectorAll('.sc').forEach(c=>{const o=old[c.dataset.n];if(!o)return;const r=c.getBoundingClientRect(),dx=o.left-r.left,dy=o.top-r.top;if(!dx&&!dy)return;c.style.transition='none';c.style.transform='translate('+dx+'px,'+dy+'px)';requestAnimationFrame(()=>requestAnimationFrame(()=>{c.style.transition='transform .6s cubic-bezier(.3,1.25,.5,1)';c.style.transform=''}))});out($('#cmpOut'),'<div class="cmd">Arrays.sort(dogs);</div><div>'+arr.map(d=>d.n).join(', ')+'</div><div class="w">// '+R[rule].w+'</div>')};
+ const fill=sel=>{sel.innerHTML=DG.map((d,i)=>'<option value="'+i+'">'+d.n.toLowerCase()+'</option>').join('')};
+ fill($('#cmpA'));fill($('#cmpB'));$('#cmpB').value='1';
+ const cmp=()=>{const a=DG[+$('#cmpA').value],b=DG[+$('#cmpB').value],r=R[rule].f(a,b);const sg=r<0?'negative: '+a.n+' goes before '+b.n:r>0?'positive: '+a.n+' goes after '+b.n:'zero: a tie, same rank';out($('#cmpOut'),'<div class="cmd">'+a.n.toLowerCase()+'.compareTo('+b.n.toLowerCase()+')</div><div>returns '+r+'</div><div class="w">// '+sg+'</div>')};
+ $('#cmpA').addEventListener('change',cmp);$('#cmpB').addEventListener('change',cmp);
+ const showCode=()=>code($('#ruleCode'),R[rule].c);
+ seg('#ruleSeg',v=>{rule=v;showCode();if(sorted)drawAfter();else cmp()});
+ $('#sortGo').onclick=()=>{const first=!sorted;sorted=true;drawAfter(first?$('#laneBefore'):null)};
+ $('#ovfBtn').onclick=()=>out($('#cmpOut'),'<div class="cmd">int a = -2_000_000_000, b = 2_000_000_000;</div><div class="cmd">a - b</div><div class="e">294967296   // positive?! says a goes AFTER b</div><div class="cmd">Integer.compare(a, b)</div><div>-1   // correct: a goes before b</div><div class="w">// the true answer, -4,000,000,000, does not fit in an int, so it wraps around</div>');
+ showCode();drawAfter();cmp();
+}catch(err){console.error(err)}
+
+/* ---------- POLYMORPHISM ---------- */
+try{
+ code($('#polySort'),['Arrays.sort(dogs);     // Dog\'s compareTo: by age','Arrays.sort(names);    // String\'s: A to Z','Arrays.sort(scores);   // Integer\'s: small to big']);
+ code($('#polyPet'),['Pet pet = new Dog(9, "Daisy", "Poodle", 3);   // a Dog IS-A Pet','pet.speak();          // runs Dog\'s version: "Daisy says: Woof!"']);
+ const O={Dog:{line:'Pet pet = new Dog(9, "Daisy", "Poodle", 3);',name:'Daisy',say:'Daisy says: Woof!',use:'#dog',st:'--fur:#f2ece2;--ear:#ddd2bf'},Cat:{line:'Pet pet = new Cat(12, "Tom", 5, true);',name:'Tom',say:'Tom says: Meow!',use:'#cat',st:''},Pet:{line:'Pet pet = new Pet(3, "Pip", 2);',name:'Pip',say:'Pip makes a sound',use:'#paw',st:'fill:#7c4dcc'}};
+ let cur='Dog';
+ const draw=()=>{const o=O[cur];$('#polyLine').textContent=o.line;const pic=$('#polyPic');pic.innerHTML='<use href="'+o.use+'"/>';pic.setAttribute('style',o.st)};
+ const B=[['pet.speak();',()=>'<div>'+O[cur].say+'</div><div class="w">// the object is a '+cur+', so '+cur+'\'s speak() runs'+(cur==='Pet'?' (no override, Pet\'s own version)':'')+'</div>'],['pet.getName();',()=>'<div class="w">// returns "'+O[cur].name+'": inherited from Pet, every Pet has it</div>'],['pet.getBreed();',()=>'<div class="e">error: cannot find symbol</div><div class="e">  symbol:   method getBreed()</div><div class="e">  location: variable pet of type Pet</div><div class="w">// the compiler only sees the variable\'s type, Pet, and not every Pet has a breed'+(cur==='Dog'?' (even though this object really is a Dog)':'')+'</div>']];
+ $('#polyBtns').innerHTML=B.map((b,i)=>'<button class="btn code" data-i="'+i+'">'+b[0]+'</button>').join('');
+ $('#polyBtns').onclick=e=>{const b=e.target.closest('button');if(!b)return;const x=B[+b.dataset.i];out($('#polyOut'),'<div class="cmd">'+esc(O[cur].line)+'</div><div class="cmd">'+x[0]+'</div>'+x[1]())};
+ seg('#polySeg',v=>{cur=v;draw();out($('#polyOut'),'<div class="cmd">'+esc(O[cur].line)+'</div><div style="opacity:.6">Same variable, same calls. Tap pet.speak();</div>')});
+ draw();out($('#polyOut'),'<div style="opacity:.6">Tap pet.speak(); then switch animals.</div>');
+}catch(err){console.error(err)}
+
+/* ---------- QUIZ 2 ---------- */
+try{
+ const Q=[['Why does Box<int> not compile?',['int is too small','Generics only hold objects; use Box<Integer>','Box needs two type parameters'],1,'Type parameters must be reference types. The wrapper Integer is the object version of int.'],['Integer obj = 5; is an example of…',['autoboxing','unboxing','casting'],0,'Java automatically wraps the primitive 5 in an Integer object.'],['After Dog[] kennel = new Dog[5]; how many Dog objects exist?',['5','0','1'],1,'The array has 5 slots, all null. Each dog needs its own new.'],['About how many steps does binary search need for 1,000,000 sorted items?',['20','1,000','500,000'],0,'Each step halves the range: 2^20 is about a million.'],['this.compareTo(that) returns -7. What does that mean?',['this goes before that','this goes after that','they are 7 years apart'],0,'Only the sign matters: negative means this comes first.'],['Arrays.sort(dogs) throws ClassCastException. What is the fix?',['Use a bigger array','Make Dog implement Comparable<Dog> and write compareTo','Sort the dogs by hand'],1,'Arrays.sort needs a rule; Comparable is the promise that the rule exists.'],['Pet pet = new Cat(12, "Tom", 5, true); pet.speak(); prints…',['Tom makes a sound','Tom says: Meow!','a compile error'],1,'The object is a Cat, so Cat\'s overriding speak() runs. That is polymorphism.']];
+ const ans={};
+ const draw=()=>{$('#quiz2Box').innerHTML=Q.map((x,i)=>'<div class="qq"><p>'+(i+1)+'. '+esc(x[0])+'</p><div class="opts">'+x[1].map((o,j)=>{let c='';if(ans[i]!==undefined){if(j===x[2])c='r';else if(j===ans[i])c='w'}return '<button class="'+c+'" data-q="'+i+'" data-j="'+j+'">'+esc(o)+'</button>'}).join('')+'</div>'+(ans[i]!==undefined?'<div class="why">'+(ans[i]===x[2]?'Right. ':'Not quite. ')+esc(x[3])+'</div>':'')+'</div>').join('');const done=Object.keys(ans).length,sc=Object.entries(ans).filter(([i,j])=>Q[i][2]===j).length;$('#q2Score').textContent=done?'Score: '+sc+' / '+done:''};
+ $('#quiz2Box').onclick=e=>{const b=e.target.closest('button');if(!b)return;const i=+b.dataset.q;if(ans[i]!==undefined)return;ans[i]=+b.dataset.j;draw()};
+ $('#q2Reset').onclick=()=>{for(const k in ans)delete ans[k];draw()};
+ draw();
+}catch(err){console.error(err)}
+
+
+/* ---------- GAME: GUESS THE TAG ---------- */
+try{
+ let secret,lo,hi,left,guesses,over;
+ const MAX=7;
+ const strip=$('#gStrip');strip.innerHTML=Array.from({length:100},()=>'<i></i>').join('');
+ const cells=[...strip.children];
+ const draw=()=>{cells.forEach((c,i)=>{const n=i+1;c.className=over&&n===secret?'w':guesses.includes(n)?'g':(n<lo||n>hi)?'x':''});
+  $('#gDots').innerHTML=Array.from({length:MAX},(_,i)=>'<svg class="'+(i<MAX-left?'used':'')+'"><use href="#paw"/></svg>').join('')+'<span style="font-weight:800;font-size:14px;align-self:center">'+left+' left</span>';
+  $('#gRange').textContent=over?'secret: '+secret:'still possible: '+lo+'–'+hi+' ('+(hi-lo+1)+')'};
+ const say=(t,c)=>{$('#gSay').className='gsay'+(c?' '+c:'');$('#gSay').innerHTML=t};
+ const fresh=()=>{secret=1+Math.floor(Math.random()*100);lo=1;hi=100;left=MAX;guesses=[];over=false;$('#gIn').value='';$('#gAnt').disabled=true;$('#gGo').disabled=false;draw();say('Bea has picked a number from 1 to 100. Your move.');out($('#gLog'),'<div style="opacity:.6">Your guesses appear here.</div>')};
+ $('#gForm').addEventListener('submit',e=>{e.preventDefault();if(over)return;const g=Math.round(+$('#gIn').value);if(!(g>=1&&g<=100)){say('Pick a whole number from 1 to 100.','bad');return}
+  if(guesses.includes(g)){say('You already tried '+g+'.','bad');return}
+  guesses.push(g);left--;const wasted=g<lo||g>hi;let msg;
+  if(g===secret){over=true;msg='<b>'+g+' is right!</b> Found in '+guesses.length+(guesses.length===1?' guess':' guesses')+'. '+(guesses.length<=MAX?'You matched the binary ant. ':'')+'Now watch how the ant does it.';say(msg,'good')}
+  else{if(g<secret)lo=Math.max(lo,g+1);else hi=Math.min(hi,g-1);msg=(g<secret?'Higher!':'Lower!')+(wasted?' (That number was already ruled out: a wasted guess.)':'');if(left===0){over=true;say('Out of guesses. The secret was <b>'+secret+'</b>. The binary ant would have found it. Watch.','bad')}else say(msg)}
+  out($('#gLog'),'<div><span class="cmd">guess '+guesses.length+':</span> '+g+' → '+(g===secret?'found':g<secret?'higher':'lower')+'</div>',true);
+  if(over){$('#gAnt').disabled=false;$('#gGo').disabled=true}
+  $('#gIn').value='';draw()});
+ $('#gNew').onclick=fresh;
+ $('#gHint').onclick=()=>{const t=$('#gHintTxt');t.hidden=!t.hidden;$('#gHint').textContent=t.hidden?'Show me the strategy':'Hide the strategy'};
+ let antT;
+ $('#gAnt').onclick=()=>{clearTimeout(antT);$('#gAnt').disabled=true;lo=1;hi=100;guesses=[];over=false;draw();out($('#gLog'),'<div class="w">// the binary ant plays: always guess mid = (lo + hi) / 2</div>');let n=0;
+  const step=()=>{const L0=lo,H0=hi,mid=Math.floor((lo+hi)/2);n++;guesses.push(mid);let r;if(mid===secret){over=true;r='found'}else if(mid<secret){lo=mid+1;r='higher'}else{hi=mid-1;r='lower'}draw();out($('#gLog'),'<div><span class="w">ant '+n+':</span> range '+L0+'–'+H0+', guess '+mid+' → '+r+'</div>',true);
+   if(over){say('The binary ant found <b>'+secret+'</b> in '+n+' guesses. It never needs more than 7, whatever the secret.','good');$('#gAnt').disabled=false}else antT=setTimeout(step,650)};
+  antT=setTimeout(step,400)};
+ fresh();
+}catch(err){console.error(err)}
+
+/* ---------- GAME: YOU ARE ARRAYS.SORT ---------- */
+try{
+ const POOL=[{n:'Rex',b:'Beagle',a:3,d:12},{n:'Luna',b:'Poodle',a:2,d:5},{n:'Milo',b:'Corgi',a:4,d:30},{n:'Bella',b:'Lab',a:5,d:8},{n:'Max',b:'Beagle',a:7,d:2},{n:'Coco',b:'Husky',a:1,d:15},{n:'Daisy',b:'Poodle',a:3,d:9},{n:'Balto',b:'Husky',a:5,d:20}];
+ const jc=(x,y)=>{const m=Math.min(x.length,y.length);for(let i=0;i<m;i++){if(x[i]!==y[i])return x.charCodeAt(i)-y.charCodeAt(i)}return x.length-y.length};
+ const ic=(x,y)=>x<y?-1:x>y?1:0;
+ const H=['@Override','public int compareTo(Dog that) {'];
+ const RULES=[
+  {t:'Youngest first',f:(x,y)=>ic(x.a,y.a),c:[...H,'    return Integer.compare(this.age, that.age);','}']},
+  {t:'A to Z by name',f:(x,y)=>jc(x.n,y.n),c:[...H,'    return this.name.compareTo(that.name);','}']},
+  {t:'Most days at camp first',f:(x,y)=>ic(y.d,x.d),c:[...H,'    return Integer.compare(that.daysAttended, this.daysAttended);  // flipped!','}']},
+  {t:'Youngest first, ties A to Z',f:(x,y)=>x.a!==y.a?ic(x.a,y.a):jc(x.n,y.n),c:[...H,'    if (this.age != that.age) {','        return Integer.compare(this.age, that.age);','    }','    return this.name.compareTo(that.name);','}']}];
+ let dogs,rule,sel=-1,swaps,won,ri=-1;
+ const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+ const sortedNow=()=>dogs.every((d,i)=>i===0||rule.f(dogs[i-1],d)<=0);
+ const selSwaps=()=>{const a=dogs.slice();let c=0;for(let i=0;i<a.length;i++){let m=i;for(let j=i+1;j<a.length;j++)if(rule.f(a[j],a[m])<0)m=j;if(m!==i){[a[i],a[m]]=[a[m],a[i]];c++}}return c};
+ let par=0;
+ const render=(anim)=>{const lane=$('#bsLane');const old={};if(anim)lane.querySelectorAll('.srow2').forEach(r=>old[r.dataset.n]=r.getBoundingClientRect());
+  let h='';dogs.forEach((d,i)=>{if(i>0){const v=rule.f(dogs[i-1],d);h+='<div class="cmpPill '+(v<0?'ok':v>0?'bad':'tie')+'">'+dogs[i-1].n.toLowerCase()+'.compareTo('+d.n.toLowerCase()+') = '+v+(v>0?'  ✗ swap?':'  ✓')+'</div>'}
+   h+='<button class="srow2'+(i===sel?' sel':'')+(won?' won':'')+'" data-i="'+i+'" data-n="'+d.n+'" style="animation-delay:'+(i*60)+'ms">'+dogSvg(d.b,44)+'<span><b>'+d.n+'</b><span class="mono">age '+d.a+' · '+d.d+' days</span></span><span class="mono" style="opacity:.6">['+i+']</span></button>'});
+  lane.innerHTML=h;
+  if(anim)lane.querySelectorAll('.srow2').forEach(r=>{const o=old[r.dataset.n];if(!o)return;const n=r.getBoundingClientRect(),dy=o.top-n.top,dx=o.left-n.left;if(!dy&&!dx)return;r.style.transition='none';r.style.transform='translate('+dx+'px,'+dy+'px)';requestAnimationFrame(()=>requestAnimationFrame(()=>{r.style.transition='transform .45s cubic-bezier(.3,1.2,.5,1)';r.style.transform=''}))});
+  $('#bsSwaps').textContent=swaps+(swaps===1?' swap':' swaps');
+  const bad=dogs.filter((d,i)=>i>0&&rule.f(dogs[i-1],d)>0).length;
+  const s=$('#bsSay');if(won){s.className='gsay good';s.innerHTML='<b>Sorted!</b> '+swaps+(swaps===1?' swap':' swaps')+'. Selection sort needs '+par+' on this line-up'+(swaps<=par?', so you tied the algorithm.':'; you can do it in fewer.')+' Try another rule.'}else{s.className='gsay';s.innerHTML=sel<0?bad+(bad===1?' pair is':' pairs are')+' out of order. Tap a dog to pick it up.':'Holding <b>'+dogs[sel].n+'</b>. Tap another dog to swap, or tap '+dogs[sel].n+' again to put it down.'}};
+ const setup=(newRule)=>{if(newRule){let k;do{k=Math.floor(Math.random()*RULES.length)}while(k===ri&&RULES.length>1);ri=k;rule=RULES[k];dogs=shuffle(POOL.slice()).slice(0,6)}do{shuffle(dogs)}while(sortedNow());sel=-1;swaps=0;won=false;par=selSwaps();$('#bsGoal').textContent=rule.t;$('#bsRuleName').textContent='Today\'s rule: '+rule.t;code($('#bsCode'),rule.c);render()};
+ $('#bsLane').onclick=e=>{const b=e.target.closest('.srow2');if(!b||won)return;const i=+b.dataset.i;if(sel<0){sel=i;render();return}if(sel===i){sel=-1;render();return}[dogs[sel],dogs[i]]=[dogs[i],dogs[sel]];sel=-1;swaps++;won=sortedNow();render(true)};
+ $('#bsNew').onclick=()=>setup(true);$('#bsShuffle').onclick=()=>setup(false);
+ setup(true);
+}catch(err){console.error(err)}
+
+/* ---------- GAME: FRONT DESK RUSH ---------- */
+try{
+ const D=[
+  [1,['Dog d = new Dog();','d.bark();'],'ok','Tuesday\'s Dog: public fields, no constructor','Runs and prints "null says: Woof!". Nothing set the name, so it keeps its default value, null.'],
+  [1,['Dog d;','d.bark();'],'comp','inside main','javac: variable d might not have been initialized. A local variable needs a value before you use it.'],
+  [1,['Dog d = null;','d.bark();'],'run','inside main','NullPointerException: d points at no dog, so there is nothing to bark.'],
+  [1,['daisy.age = -500;'],'comp','age is private','javac: age has private access in Dog. The only way in is setAge().'],
+  [1,['daisy.setAge(-500);'],'ok','setAge checks 0–30','Runs fine: setAge prints "Invalid age: -500" and leaves the age alone. Rejecting bad data is not a crash.'],
+  [1,['Dog d = new Dog();'],'comp','Dog only has Dog(String, String, int)','Writing any constructor removes the free default one, so new Dog() has nothing to call.'],
+  [1,['public static void hi() {','    System.out.println(name);','}'],'comp','a method inside class Dog','javac: non-static variable name cannot be referenced from a static context. Which dog\'s name?'],
+  [1,['Dog alias = daisy;','alias.checkIn();'],'ok','daisy already exists','Runs: alias and daisy point at the same dog, so Daisy\'s daysAttended goes up.'],
+  [1,['String s = daisy + 7;'],'comp','Dog has a toString()','javac: bad operand types for +. Neither side is a String, so toString() is never called.'],
+  [1,['System.out.println("Tag: " + daisy);'],'ok','Dog has a toString()','Runs: one side is a String, so Java calls daisy.toString() for you.'],
+  [1,['public Dog(String breed) {','    this.breed = breed;','}'],'comp','Dog extends Pet; Pet only has Pet(int, String, int)','javac inserts super() at the top, and Pet has no constructor with no arguments.'],
+  [1,['@Override','public void speek() { ... }'],'comp','inside Dog extends Pet','javac: method does not override or implement a method from a supertype. @Override caught the typo.'],
+  [1,['Dog(String name) { ... }','Dog(String breed) { ... }'],'comp','two constructors in Dog','javac: constructor Dog(String) is already defined. Parameter names don\'t count, only types.'],
+  [1,['if (daisy == daisy2) {','    System.out.println("same dog!");','}'],'ok','daisy2 was made with its own new Dog(…)','Trick card: it runs fine, it just never prints. == compares arrows. A logic bug, not a crash.'],
+  [2,['Pet p = new Dog(9, "Daisy", "Poodle", 3);','p.getBreed();'],'comp','getBreed() is only in Dog','javac: cannot find symbol. The variable\'s type is Pet, and not every Pet has a breed.'],
+  [2,['Box<int> b = new Box<>();'],'comp','generic class Box<T>','javac: unexpected type, required: reference. Generics only hold objects: use Box<Integer>.'],
+  [2,['Box<String> b = new Box<>();','b.set(42);'],'comp','generic class Box<T>','javac: incompatible types: int cannot be converted to String. Type safety at work.'],
+  [2,['Box<Integer> b = new Box<>();','b.set(42);'],'ok','generic class Box<T>','Runs: 42 is autoboxed into an Integer on its way into the box.'],
+  [2,['Dog[] kennel = new Dog[5];','kennel[0].bark();'],'run','inside main','NullPointerException: new Dog[5] made five empty slots and zero dogs.'],
+  [2,['Dog[] kennel = new Dog[5];','System.out.println(kennel.length);'],'ok','inside main','Runs and prints 5: five slots, even though there are no dogs yet.'],
+  [2,['Arrays.sort(dogs);'],'run','Dog does not implement Comparable','ClassCastException at run time. Arrays.sort(Object[]) compiles, then finds no compareTo rule.'],
+  [2,['public class Dog implements Comparable<Dog> {','    // compareTo is missing','}'],'comp','the interface promise','javac: Dog does not override abstract method compareTo(Dog). An interface is a promise javac checks.'],
+  [2,['Integer a = 5;','int b = a + 1;'],'ok','inside main','Runs: a is unboxed automatically, so b = 6.'],
+  [2,['Integer x = null;','int y = x;'],'run','inside main','NullPointerException: Java tries to unbox x, but there is no Integer in it.'],
+  [2,['int[] a = {2, 5, 8};','System.out.println(a[3]);'],'run','inside main','ArrayIndexOutOfBoundsException: the valid indexes are 0, 1 and 2.'],
+  [2,['Pet p = new Cat(12, "Tom", 5, true);','p.speak();'],'ok','Cat overrides speak()','Runs and prints "Tom says: Meow!". The object is a Cat, so Cat\'s version runs.'],
+  [2,['T x = new T();'],'comp','inside class Box<T>','javac: unexpected type. You can\'t create an object from a type parameter.'],
+  [2,['Integer a = 1000, b = 1000;','System.out.println(a == b);'],'ok','inside main','Runs and prints false: two separate Integer objects. Compare values with equals().']];
+ const LAB={ok:'Runs fine',comp:'Compile error',run:'Crashes at runtime'};
+ const ROUND=10,TIME=12000;
+ let deck='mix',cards=[],i=0,score=0,streak=0,bones=3,answered=false,raf=0,t0=0,missed=[],right=0,mode='start';
+ const best=()=>{try{return JSON.parse(localStorage.getItem('rushBest')||'{}')}catch(e){return {}}};
+ const hud=()=>{$('#rBones').innerHTML=[0,1,2].map(k=>'<svg viewBox="0 0 40 16" class="'+(k<bones?'':'lost')+'"><use href="#bone"/></svg>').join('');$('#rScore').textContent=score;$('#rStreak').textContent=streak;$('#rNum').textContent=Math.min(i+(mode==='start'?0:1),ROUND);$('#rBest').textContent=best()[deck]||0};
+ const stage=$('#rStage');
+ const startScreen=()=>{mode='start';cancelAnimationFrame(raf);hud();stage.innerHTML='<p style="font-weight:700;margin-top:4px">Pick a deck, then press Start. 10 cards, 12 seconds each. Faster answers score more; 3 right in a row doubles your points.</p><div class="seg" id="rDeck" role="group" aria-label="Deck"><button data-v="1" aria-pressed="'+(deck==='1')+'">Part 1 deck</button><button data-v="2" aria-pressed="'+(deck==='2')+'">Part 2 deck</button><button data-v="mix" aria-pressed="'+(deck==='mix')+'">Mixed</button></div><div class="row" style="margin-top:14px"><button class="btn solid" id="rStart" style="min-width:160px;font-size:18px">Start</button></div><p class="src" style="margin-top:12px">Keyboard: 1 = runs, 2 = compile error, 3 = crash, Enter = next card.</p>';seg('#rDeck',v=>{deck=v;hud()});$('#rStart').onclick=start};
+ const start=()=>{const pool=D.filter(c=>deck==='mix'||String(c[0])===deck);for(let k=pool.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[pool[k],pool[j]]=[pool[j],pool[k]]}cards=pool.slice(0,ROUND);i=0;score=0;streak=0;bones=3;missed=[];right=0;show()};
+ const show=()=>{mode='play';answered=false;const c=cards[i];hud();
+  stage.innerHTML='<div class="src" style="margin-bottom:4px">Context: '+esc(c[3])+'</div><pre class="java" id="rCode"></pre><div class="tbar"><i id="rBar"></i></div><div class="ansrow">'+['ok','comp','run'].map((k,n)=>'<button class="ab k'+(n+1)+'" data-k="'+k+'">'+LAB[k]+'<small>key '+(n+1)+'</small></button>').join('')+'</div><div id="rFb"></div>';
+  code($('#rCode'),c[1]);stage.querySelector('.ansrow').onclick=e=>{const b=e.target.closest('.ab');if(b)answer(b.dataset.k)};
+  t0=performance.now();cancelAnimationFrame(raf);const tick=t=>{const u=Math.max(0,1-(t-t0)/TIME),bar=$('#rBar');if(!bar)return;bar.style.width=(u*100)+'%';bar.style.background=u<.3?'var(--bad)':u<.6?'var(--tag)':'var(--ok)';if(u<=0){answer(null);return}raf=requestAnimationFrame(tick)};raf=requestAnimationFrame(tick)};
+ const answer=k=>{if(answered||mode!=='play')return;answered=true;cancelAnimationFrame(raf);const c=cards[i],ok=k===c[2],left=Math.max(0,TIME-(performance.now()-t0))/1000;let pts=0;
+  if(ok){streak++;right++;pts=100+Math.round(left)*10;if(streak>=3)pts*=2;score+=pts}else{streak=0;bones--;missed.push(c)}
+  stage.querySelectorAll('.ab').forEach(b=>{b.disabled=true;if(b.dataset.k===c[2])b.classList.add('right');else if(b.dataset.k===k)b.classList.add('wrong')});
+  const last=bones<=0||i>=ROUND-1;
+  $('#rFb').innerHTML='<div class="note '+(ok?'good':'bad')+'" style="margin-top:12px"><p>'+(ok?'<span class="pts">+'+pts+(streak>=3?' (streak ×2)':'')+'</span> ':'<b>'+(k?'Not quite.':'Time\'s up!')+'</b> ')+'Answer: <b>'+LAB[c[2]]+'</b>. '+esc(c[4])+'</p></div><div class="row"><button class="btn solid" id="rNext">'+(last?'See results':'Next card')+'</button></div>';
+  hud();const nb=$('#rNext');nb.onclick=()=>{if(last)end();else{i++;show()}};try{nb.focus({preventScroll:true})}catch(e){}};
+ const end=()=>{mode='end';const b=best();const nb=score>(b[deck]||0);if(nb){b[deck]=score;try{localStorage.setItem('rushBest',JSON.stringify(b))}catch(e){}}
+  const played=Math.min(i+1,ROUND),frac=right/ROUND;const rank=frac===1?'Golden leash':frac>=.8?'Head of camp IT':frac>=.5?'Camp counselor':'Intern, try again!';
+  hud();stage.innerHTML='<div style="text-align:center;padding:10px 0"><div class="src">'+(bones<=0?'Out of bones after '+played+' cards. Bea takes over the desk.':'Shift over!')+'</div><div class="rank">'+rank+'</div><p style="margin:6px auto;max-width:none"><b>'+score+'</b> points · '+right+' right out of '+played+(played===1?' card':' cards')+(played<ROUND?' played':'')+(nb?' · <b style="color:var(--ok)">new best!</b>':'')+'</p></div>'+(missed.length?'<p class="ptitle">Review the ones that got away</p>'+missed.map(c=>'<div class="note bad" style="margin:8px 0"><pre class="java rmiss"></pre><p style="margin-top:8px"><b>'+LAB[c[2]]+'.</b> '+esc(c[4])+'</p></div>').join(''):'<div class="note good"><p>No mistakes. The interns are in awe.</p></div>')+'<div class="row" style="margin-top:12px;justify-content:center"><button class="btn solid" id="rAgain">Play again</button><button class="btn ghost" id="rDeckBtn">Change deck</button></div>';
+  stage.querySelectorAll('.rmiss').forEach((el,k)=>code(el,missed[k][1]));$('#rAgain').onclick=start;$('#rDeckBtn').onclick=startScreen};
+ document.addEventListener('keydown',e=>{if(mode!=='play')return;const tg=e.target;if(tg&&/INPUT|SELECT|TEXTAREA/.test(tg.tagName))return;const r=$('#rushCab').getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)return;if(!answered&&'123'.includes(e.key)&&e.key.length===1){e.preventDefault();answer(['ok','comp','run'][+e.key-1])}else if(answered&&e.key==='Enter'&&tg!==$('#rNext')){e.preventDefault();$('#rNext')?.click()}});
+ startScreen();
+}catch(err){console.error(err)}
+
+/* ---------- PAW BADGES ---------- */
+try{
+ const BAD={top:'Dog factory',why:'Color mixer',camp:'Bug hunter',words:'Word sorter',java:'Code reader','new':'Memory walker',dot:'Dot talker',ctor:'Form filler',overload:'Overloader',tostring:'Printer',equals:'Twin spotter','static':'Head counter',encap:'Gatekeeper',api:'Menu maker',inherit:'Family tree',override:'Voice coach',quiz:'Week 1 graduate',generics:'Box builder',wrappers:'Gift wrapper',dogarray:'Kennel keeper',search:'Tag finder',ants:'Ant racer',sorting:'Plug tester',compareto:'Line-up judge',poly:'Ringmaster',guess:'Ant beater',besort:'Human sorter',rush:'Front desk ace',quiz2:'Season graduate'};
+ const keys=Object.keys(BAD),total=keys.length,got=new Set();
+ try{JSON.parse(localStorage.getItem('oopPaws')||'[]').forEach(k=>{if(BAD[k])got.add(k)})}catch(e){}
+ const grad=()=>{const n=got.size;$('#pawN').textContent=n;$('#pawT').textContent=total;$('#gradMsg').innerHTML=n>=total?'<b>All '+total+' paw badges!</b> Bea hands you the camp\'s golden leash. You are officially an object-oriented programmer.':'Paw badges so far: <b>'+n+' of '+total+'</b>. Still to earn: '+keys.filter(k=>!got.has(k)).map(k=>'<a href="#'+k+'">'+BAD[k]+'</a>').join(', ')+'.'};
+ let tmr;
+ const award=k=>{if(!BAD[k]||got.has(k))return;got.add(k);try{localStorage.setItem('oopPaws',JSON.stringify([...got]))}catch(e){}grad();$('#toastTxt').textContent='Paw badge: '+BAD[k]+' ('+got.size+'/'+total+')';const t=$('#toast');t.classList.add('show');clearTimeout(tmr);tmr=setTimeout(()=>t.classList.remove('show'),2200)};
+ const hit=e=>{const t=e.target&&e.target.closest?e.target.closest('button,input,select,[role=button],.paint,.plug'):null;if(!t||t.closest('nav'))return;const sec=t.closest('section[id],header[id]');if(sec)award(sec.id)};
+ document.addEventListener('click',hit,true);document.addEventListener('input',hit,true);
+ grad();
+}catch(err){console.error(err)}
+
+}
+</script>
+</body>
+</html>
